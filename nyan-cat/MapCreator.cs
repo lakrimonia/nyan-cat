@@ -23,10 +23,23 @@ namespace nyan_cat
                 if (gameObject is Platform)
                 {
                     var platform = gameObject as Platform;
-                    var begin = platform.Center.X - platform.Length / 2;
-                    var end = platform.Center.X + platform.Length / 2;
-                    for (var x = begin; x < end + 1; x++)
-                        map[x, platform.Center.Y] = platform;
+                    var beginX = platform.Center.X - platform.Length / 2;
+                    var endX = platform.Center.X + platform.Length / 2;
+                    var beginY = platform.Center.Y - 13;
+                    var endY = platform.Center.Y + 13;
+                    for (var y = beginY; y < endY + 1; y++)
+                        for (var x = beginX; x < endX + 1; x++)
+                            map[x, y] = platform;
+                }
+                else
+                {
+                    var beginX = gameObject.Center.X - 25;
+                    var endX = gameObject.Center.X + 25;
+                    var beginY = gameObject.Center.Y - 25;
+                    var endY = gameObject.Center.Y + 25;
+                    for (var y = beginY; y < endY + 1; y++)
+                        for (var x = beginX; x < endX + 1; x++)
+                            map[x, y] = gameObject;
                 }
             }
             return map;

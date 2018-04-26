@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
+using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -14,16 +15,17 @@ namespace nyan_cat
         Fall
     }
 
-    public class NyanCat
+    public class NyanCat : IGameObject
     {
-        public Point Position { get; }
+        public Point Center { get; }
+        public Vector2 Velocity { get; }
         public CatState State;
         public IGem CurrentGem { get; }
         public IPowerUp CurrentPowerUp { get; }
 
-        public NyanCat(Point position)
+        public NyanCat(Point center)
         {
-            Position = position;
+            Center = center;
         }
 
         public void Jump()
