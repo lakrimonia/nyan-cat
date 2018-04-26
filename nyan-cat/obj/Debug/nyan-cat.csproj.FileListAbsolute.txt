@@ -17,3 +17,13 @@ C:\Users\user\Desktop\Учёба\C#\2 семестр\11-12. События. Ок
 C:\Users\user\Desktop\Учёба\C#\2 семестр\11-12. События. Оконные приложения\nyan-cat\obj\Debug\nyan-cat.exe
 C:\Users\user\Desktop\Учёба\C#\2 семестр\11-12. События. Оконные приложения\nyan-cat\obj\Debug\nyan-cat.pdb
 C:\Users\user\Desktop\Учёба\C#\2 семестр\11-12. События. Оконные приложения\nyan-cat\obj\Debug\nyan_cat.MyForm.resources
+C:\Users\user\Documents\GitHub\nyan-cat\nyan-cat\bin\Debug\nyan-cat.exe.config
+C:\Users\user\Documents\GitHub\nyan-cat\nyan-cat\bin\Debug\nyan-cat.exe
+C:\Users\user\Documents\GitHub\nyan-cat\nyan-cat\bin\Debug\nyan-cat.pdb
+C:\Users\user\Documents\GitHub\nyan-cat\nyan-cat\obj\Debug\nyan-cat.csprojResolveAssemblyReference.cache
+C:\Users\user\Documents\GitHub\nyan-cat\nyan-cat\obj\Debug\nyan_cat.MyForm.resources
+C:\Users\user\Documents\GitHub\nyan-cat\nyan-cat\obj\Debug\nyan_cat.Properties.Resources.resources
+C:\Users\user\Documents\GitHub\nyan-cat\nyan-cat\obj\Debug\nyan-cat.csproj.GenerateResource.cache
+C:\Users\user\Documents\GitHub\nyan-cat\nyan-cat\obj\Debug\nyan-cat.csproj.CoreCompileInputs.cache
+C:\Users\user\Documents\GitHub\nyan-cat\nyan-cat\obj\Debug\nyan-cat.exe
+C:\Users\user\Documents\GitHub\nyan-cat\nyan-cat\obj\Debug\nyan-cat.pdb

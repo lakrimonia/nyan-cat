@@ -1,15 +1,17 @@
 ﻿using System.Drawing;
+using System.Numerics;
 
 namespace nyan_cat
 {
-    public class Platform
+    public class Platform : IGameObject
     {
-        public Point Position { get; }
+        public Vector2 Velocity { get; }
+        public Point Center { get; }
         public int Length { get; }
 
-        public Platform(Point position, int length)
+        public Platform(Point center, int length)
         {
-            Position = position;
+            Center = center;
             Length = length;
         }
     }

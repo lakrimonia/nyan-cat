@@ -9,13 +9,14 @@ namespace nyan_cat
 {
     public class Game
     {
-        public NyanCat nyanCat { get; }
+        public NyanCat NyanCat { get; }
         public int Score { get; }
         public int Combo { get; }
+        public bool IsOver { get; }
 
         public Game()
         {
-            nyanCat = new NyanCat(new Point(0, 0));
+            NyanCat = new NyanCat(new Point(0, 0));
         }
     }
 }
