@@ -17,8 +17,8 @@ namespace nyan_cat
 
     public class NyanCat : IGameObject
     {
-        public Point Center { get; }
-        public Vector2 Velocity { get; }
+        public Point Center { get; private set; }
+        public Vector2 Velocity { get; private set; }
         public CatState State;
         public IGem CurrentGem { get; }
         public IPowerUp CurrentPowerUp { get; }
@@ -26,11 +26,21 @@ namespace nyan_cat
         public NyanCat(Point center)
         {
             Center = center;
+            Velocity = new Vector2(0, 0);
         }
 
         public void Jump()
         {
+            Velocity = new Vector2(0, 10);
+            State = CatState.Jump;
+        }
 
+        public void Move()
+        {
+            if (State == CatState.Fall)
+                Velocity = new Vector2(0, -10);
+            Center = new Point(Center.X - (int)Velocity.X,
+                Center.Y - (int)Velocity.Y);
         }
     }
 }
