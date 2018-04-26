@@ -12,5 +12,7 @@ namespace nyan_cat
     {
         Vector2 Velocity { get; }
         Point Center { get; }
+        int Height { get; }
+        int Width { get; }
     }
 }

@@ -17,6 +17,8 @@ namespace nyan_cat
 
     public class NyanCat : IGameObject
     {
+        public int Height { get; }
+        public int Width { get; }
         public Point Center { get; private set; }
         public Vector2 Velocity { get; private set; }
         public CatState State;
@@ -25,6 +27,8 @@ namespace nyan_cat
 
         public NyanCat(Point center)
         {
+            Height = 80;
+            Width = 50;
             Center = center;
             Velocity = new Vector2(0, 0);
         }

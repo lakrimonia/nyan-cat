@@ -5,16 +5,17 @@ namespace nyan_cat
 {
     public class Platform : IGameObject
     {
-        public int Height = 10;
+        public int Height { get; }
         public Vector2 Velocity { get; }
         public Point Center { get; private set; }
-        public int Length { get; }
+        public int Width { get; }
         public Point RightTopCorner { get; private set; }
 
-        public Platform(Point center, int length)
+        public Platform(Point center, int width)
         {
+            Height = 26;
             Center = center;
-            Length = length;
+            Width = width;
             RightTopCorner = GetRightTopCorner(Center);
             Velocity = new Vector2(-1, 0);
         }
@@ -28,7 +29,7 @@ namespace nyan_cat
 
         private Point GetRightTopCorner(Point center)
         {
-            return new Point(center.X - Length / 2,
+            return new Point(center.X - Width / 2,
                 center.Y - Height / 2);
         }
     }
