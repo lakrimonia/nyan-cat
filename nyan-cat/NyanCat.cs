@@ -17,6 +17,7 @@ namespace nyan_cat
 
     public class NyanCat : IGameObject
     {
+        public bool IsAlive { get; }
         public int Height { get; }
         public int Width { get; }
         public Point Center { get; private set; }
@@ -27,6 +28,7 @@ namespace nyan_cat
 
         public NyanCat(Point center)
         {
+            IsAlive = true;
             Height = 80;
             Width = 50;
             Center = center;

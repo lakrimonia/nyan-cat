@@ -5,6 +5,7 @@ namespace nyan_cat
 {
     public class Platform : IGameObject
     {
+        public bool IsAlive { get; }
         public int Height { get; }
         public Vector2 Velocity { get; }
         public Point Center { get; private set; }
@@ -13,6 +14,7 @@ namespace nyan_cat
 
         public Platform(Point center, int width)
         {
+            IsAlive = true;
             Height = 26;
             Center = center;
             Width = width;

@@ -14,5 +14,8 @@ namespace nyan_cat
         Point Center { get; }
         int Height { get; }
         int Width { get; }
+        bool IsAlive { get; }
+
+        void Move();
     }
 }
