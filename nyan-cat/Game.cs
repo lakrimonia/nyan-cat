@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
@@ -9,17 +9,51 @@ namespace nyan_cat
 {
     public class Game
     {
-        public NyanCat NyanCat { get; }
-        public int Score { get; }
-        public int Combo { get; }
-        public bool IsOver { get; }
+        public NyanCat NyanCat { get; private set; }
+        public int Score { get; private set; }
+        public int Combo { get; private set; }
+        public bool IsOver { get; private set; }
         public IGameObject[,] Map { get; }
-        public List<IGameObject> GameObjects { get; }
+        public List<IGameObject> GameObjects { get; private set; }
 
         public Game()
         {
             NyanCat = new NyanCat(new Point(0, 0));
             Map = MapCreator.CreateRandomMap();
+            Score = 0;
+            IsOver = false;
+        }
+
+        public void Update()
+        {
+            foreach (var gameObject in GameObjects)
+            {
+                gameObject.Move();
+            }
+            NyanCat.Move();
+            if (NyanCat.Center.Y <= 0)
+            {
+                IsOver = true;
+                return;
+            }
+            if (CatOnPlatform())
+                NyanCat.State = CatState.Run;
+            var metObject = FindIntersectedObject(); 
+            if (!(metObject is null))
+                throw new Exception(); // Активировать объект
+            Score += 1 * Combo;
+        }
+
+        private IGameObject FindIntersectedObject()
+        {
+            // Ищет объект, с котормы пересеклась кошка.
+            //Если таких нет, возвращает null
+            throw new Exception();
+        }
+
+        private bool CatOnPlatform()
+        {
+            throw new Exception();
         }
     }
 }
