@@ -15,9 +15,9 @@ namespace nyan_cat
         private const int PlatformHeight = 26;
         private const int OtherObjectSize = 50;
 
-        public static IGameObject[,] CreateRandomMap(int width, int height)
+        public static IGameObject[,] CreateRandomMap()
         {
-            var map = new IGameObject[width, height];
+            var map = new IGameObject[GameWidth, GameHeight];
             for (var x = 0; x <= GameWidth - 200; x += 250)
             {
                 PlacePlatformsAndBombs(map, x);
