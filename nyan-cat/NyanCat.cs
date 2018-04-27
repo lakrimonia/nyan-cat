@@ -47,8 +47,13 @@ namespace nyan_cat
                 Velocity = new Vector2(0, -10);
             if (State == CatState.Run)
                 Velocity = new Vector2(0, 0);
-            Center = new Point(Center.X - (int)Velocity.X,
-                Center.Y - (int)Velocity.Y);
+            if (Center.Y + (int)Velocity.Y <= 0)
+            {
+                Center = new Point(Center.X + (int)Velocity.X, 0);
+                State = CatState.Fall;
+            }
+            Center = new Point(Center.X + (int)Velocity.X,
+                Center.Y + (int)Velocity.Y);
         }
     }
 }
