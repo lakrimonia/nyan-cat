@@ -21,7 +21,7 @@ namespace nyan_cat
             for (var x = 0; x <= GameWidth - 200; x += 250)
             {
                 PlacePlatformsAndBombs(map, x);
-                PlaceFood(map, x);
+                PlaceFoodAndMilk(map, x);
                 PlacePowerUps();
             }
             return map;
@@ -40,7 +40,7 @@ namespace nyan_cat
             }
         }
 
-        private static void PlaceFood(IGameObject[,] map, int x)
+        private static void PlaceFoodAndMilk(IGameObject[,] map, int x)
         {
             for (var y = 0; y < GameHeight - 100; y += 50 + PlatformHeight)
             {
@@ -48,9 +48,18 @@ namespace nyan_cat
                 var foodCount = rnd.Next(0 - 1, 5);
                 for (var i = 0; i < foodCount; i++)
                 {
-                    var foodItem = new Food(new Point(x + OtherObjectSize / 2,
-                        y + OtherObjectSize / 2));
-                    PlaceGameObject(map, foodItem);
+                    var choice = rnd.Next(0, 2);
+                    IGameObject item;
+                    var itemCenter = new Point(x + OtherObjectSize / 2,
+                        y + OtherObjectSize / 2);
+                    if (choice == 1)
+                        item = new Food(itemCenter);
+                    else
+                    {
+                        var isGenerateCow = IsCreate(15);
+                        item = isGenerateCow ? new Cow(itemCenter) : new Milk(itemCenter);
+                    }
+                    PlaceGameObject(map, item);
                 }
             }
         }
@@ -60,15 +69,20 @@ namespace nyan_cat
             throw new NotImplementedException();
         }
 
-        private static Bomb GenerateBomb(Platform platform)
+        private static bool IsCreate(int chance)
         {
             var chances = new List<bool>();
-            for (var i = 0; i < 20; i++)
+            for (var i = 0; i < chance; i++)
                 chances.Add(true);
-            for (var i = 0; i < 80; i++)
+            for (var i = 0; i < 100 - chance; i++)
                 chances.Add(false);
             var rnd = new Random();
-            var isGenerateBomb = chances.OrderBy(e => rnd.Next(100)).First();
+            return chances.OrderBy(e => rnd.Next(100)).First();
+        }
+
+        private static Bomb GenerateBomb(Platform platform)
+        {
+            var isGenerateBomb = IsCreate(20);
             return isGenerateBomb
                 ? new Bomb(new Point(platform.Center.X,
                     platform.Center.Y + PlatformHeight / 2 + OtherObjectSize / 2))
