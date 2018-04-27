@@ -100,7 +100,7 @@ namespace nyan_cat
                 if (map[x, y] == null)
                 {
                     var width = Math.Min(rnd.Next(100 - 1, 400), GameWidth - x);
-                    if (width % 2 == 1)
+                    if (width % 2 == 0)
                         width--;
                     result[y] = width;
                 }
