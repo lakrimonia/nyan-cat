@@ -33,16 +33,30 @@ namespace nyan_cat.Tests
         }
 
         [Test]
-
-        public void OverEdge()
+        public void OverEdge1()
         {
-            var platform = CreatePlatform(0, 0, 1);
-            platform.Move();
-            Assert.AreEqual(false, platform.IsAlive);
+            var platform = CreatePlatform(2, 2, 2);
+            Move(platform, 3);
+            Assert.AreEqual(1, platform.Width, platform.ToString());
         }
+
+        [Test]
+        public void OverEdge2()
+        {
+            var platform = CreatePlatform(2, 2, 2);
+            Move(platform, 4);
+            Assert.AreEqual(false, platform.IsAlive, platform.ToString());
+        }
+
         public Platform CreatePlatform(int x, int y, int width)
         {
             return new Platform(new Point(x, y), width);
+        }
+
+        public void Move(Platform platform, int count)
+        {
+            for (var i = 0; i < count; i++)
+                platform.Move();
         }
     }
 }
