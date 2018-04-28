@@ -37,13 +37,13 @@ namespace nyan_cat
                         graphics.DrawImage(Image.FromFile("platform.png"), new Point(i, left.Y));
                 }
                 var leftCorner = obj.LeftTopCorner;
-                if (obj is Milk)
+                if (obj is Cow)
+                    graphics.DrawImage(Image.FromFile("cow.png"), leftCorner);
+                else if (obj is Milk)
                 {
                     graphics.DrawImage(Image.FromFile("milk.png"), leftCorner);
                 }
-                if (obj is Cow)
-                    graphics.DrawImage(Image.FromFile("cow.png"), leftCorner);
-                if (obj is Gem)
+                else if (obj is Gem)
                 {
                     var gem = obj as Gem;
                     string file = null;
@@ -55,7 +55,7 @@ namespace nyan_cat
                         file = "grey-gem.png";
                     graphics.DrawImage(Image.FromFile(file), leftCorner);
                 }
-                if (obj is Food)
+                else if (obj is Food)
                     graphics.DrawImage(Image.FromFile("cake.png"), leftCorner);
             }
         }

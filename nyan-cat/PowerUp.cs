@@ -36,5 +36,10 @@ namespace nyan_cat
         {
             throw new NotImplementedException();
         }
+
+        public override string ToString()
+        {
+            return $"PowerUp ({LeftTopCorner.X}, {LeftTopCorner.Y})";
+        }
     }
 }

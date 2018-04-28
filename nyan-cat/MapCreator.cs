@@ -46,19 +46,18 @@ namespace nyan_cat
             for (var y = 0; y < GameHeight - 100; y += 50 + PlatformHeight)
             {
                 var rnd = new Random();
-                var foodCount = rnd.Next(0 - 1, 4);
+                var foodCount = rnd.Next(0, 4 + 1);
                 for (var i = 0; i < foodCount; i++)
                 {
-                    var choice = rnd.Next(0, 2);
+                    var choice = rnd.Next(0, 1 + 1);
                     IGameObject item;
-                    var itemCenter = new Point(x + OtherObjectSize / 2,
-                        y + OtherObjectSize / 2);
+                    var leftTopCorner = new Point(x + 50 * i, y);
                     if (choice == 1)
-                        item = new Food(itemCenter);
+                        item = new Food(leftTopCorner);
                     else
                     {
                         var isGenerateCow = IsCreate(15);
-                        item = isGenerateCow ? new Cow(itemCenter) : new Milk(itemCenter);
+                        item = isGenerateCow ? new Cow(leftTopCorner) : new Milk(leftTopCorner);
                     }
                     PlaceGameObject(map, item);
                 }
@@ -118,17 +117,16 @@ namespace nyan_cat
             var result = new Dictionary<int, int>(); // <y, width>
             var ys = GetYs(50, GameHeight - 100, 50);
             var rnd = new Random();
+            var platformsCount = rnd.Next(3, 5 + 1);
             ys = ys.OrderBy(item => rnd.Next(650 / 50));
             foreach (var y in ys)
             {
                 if (map.Field[x, y] == null)
                 {
-                    var width = Math.Min(rnd.Next(100 - 1, 400), GameWidth - x);
-                    if (width % 2 == 0)
-                        width--;
+                    var width = Math.Min(rnd.Next(100, 400 + 1), GameWidth - x - 1);
                     result[y] = width;
                 }
-                if (result.Count == 5)
+                if (result.Count == platformsCount)
                     break;
             }
             return result;
@@ -138,7 +136,7 @@ namespace nyan_cat
         {
             for (var i = 0; i < end / step; i++)
             {
-                var y = begin + i * (step + 26);
+                var y = begin + i * (step + PlatformHeight);
                 if (y > end)
                     yield break;
                 yield return y;

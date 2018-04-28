@@ -38,5 +38,10 @@ namespace nyan_cat
         {
             throw new NotImplementedException();
         }
+
+        public override string ToString()
+        {
+            return $"Gem ({LeftTopCorner.X}, {LeftTopCorner.Y})";
+        }
     }
 }

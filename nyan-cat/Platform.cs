@@ -39,5 +39,10 @@ namespace nyan_cat
             LeftTopCorner = new Point(LeftTopCorner.X + dx,
                 LeftTopCorner.Y + dy);
         }
+
+        public override string ToString()
+        {
+            return $"Platform ({LeftTopCorner.X}, {LeftTopCorner.Y})";
+        }
     }
 }

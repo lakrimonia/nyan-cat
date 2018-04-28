@@ -33,5 +33,10 @@ namespace nyan_cat
                 LeftTopCorner.Y + dy);
             IsAlive = LeftTopCorner.X < 0;
         }
+
+        public override string ToString()
+        {
+            return $"Bomb ({LeftTopCorner.X}, {LeftTopCorner.Y})";
+        }
     }
 }
