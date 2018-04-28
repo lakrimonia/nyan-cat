@@ -27,3 +27,6 @@ C:\Users\user\Documents\GitHub\nyan-cat\nyan-cat\obj\Debug\nyan-cat.csproj.Gener
 C:\Users\user\Documents\GitHub\nyan-cat\nyan-cat\obj\Debug\nyan-cat.csproj.CoreCompileInputs.cache
 C:\Users\user\Documents\GitHub\nyan-cat\nyan-cat\obj\Debug\nyan-cat.exe
 C:\Users\user\Documents\GitHub\nyan-cat\nyan-cat\obj\Debug\nyan-cat.pdb
+C:\Users\user\Documents\GitHub\nyan-cat\nyan-cat\bin\Debug\nunit.framework.dll
+C:\Users\user\Documents\GitHub\nyan-cat\nyan-cat\bin\Debug\nunit.framework.xml
+C:\Users\user\Documents\GitHub\nyan-cat\nyan-cat\obj\Debug\nyan-cat.csproj.CopyComplete

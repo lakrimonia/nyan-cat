@@ -11,7 +11,11 @@ namespace nyan_cat
     {
         public NyanCat NyanCat { get; private set; }
         public int Score { get; private set; }
-        public int Combo { get; private set; }
+
+        private int combo;
+        public int Combo => NyanCat.CurrentGem.Kind == GemKind.DoubleCombo 
+            ? combo * 2 : combo;
+
         public bool IsOver { get; private set; }
         public IGameObject[,] Map { get; }
         public List<IGameObject> GameObjects { get; private set; }

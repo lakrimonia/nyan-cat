@@ -31,7 +31,7 @@ namespace nyan_cat
         {
             foreach (var p in GeneratePlatforms(map, x))
             {
-                var platformCenter = new Point(x - p.Value / 2, p.Key - PlatformHeight / 2);
+                var platformCenter = new Point(x + p.Value / 2, p.Key - PlatformHeight / 2);
                 var platform = new Platform(platformCenter, p.Value);
                 var bomb = GenerateBomb(platform);
                 PlaceGameObject(map, platform);

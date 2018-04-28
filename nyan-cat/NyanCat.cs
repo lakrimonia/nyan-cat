@@ -23,8 +23,8 @@ namespace nyan_cat
         public Point Center { get; private set; }
         public Vector2 Velocity { get; private set; }
         public CatState State;
-        public IGem CurrentGem { get; }
-        public IPowerUp CurrentPowerUp { get; }
+        public Gem CurrentGem { get; }
+        public PowerUp CurrentPowerUp { get; }
 
         public NyanCat(Point center)
         {
