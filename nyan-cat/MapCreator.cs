@@ -22,7 +22,7 @@ namespace nyan_cat
             {
                 PlacePlatformsAndBombs(map, x);
                 PlaceFoodAndMilk(map, x);
-                PlacePowerUps();
+                PlacePowerUpOrGem(map, x);
             }
             return map;
         }
@@ -45,7 +45,7 @@ namespace nyan_cat
             for (var y = 0; y < GameHeight - 100; y += 50 + PlatformHeight)
             {
                 var rnd = new Random();
-                var foodCount = rnd.Next(0 - 1, 5);
+                var foodCount = rnd.Next(0 - 1, 4);
                 for (var i = 0; i < foodCount; i++)
                 {
                     var choice = rnd.Next(0, 2);
@@ -64,9 +64,29 @@ namespace nyan_cat
             }
         }
 
-        private static void PlacePowerUps()
+        private static void PlacePowerUpOrGem(Map map, int x)
         {
-            throw new NotImplementedException();
+            for (var y = 0; y < GameHeight - 100; y += 50 + PlatformHeight)
+            {
+                if (!IsCreate(10))
+                    continue;
+                var itemCenter = new Point(x + OtherObjectSize / 2,
+                    y + OtherObjectSize / 2);
+                var isGem = IsCreate(30);
+                IGameObject item;
+                if (isGem)
+                    item = new Gem(itemCenter, GetRandomEnumValue<GemKind>());
+                else
+                    item = new PowerUp(itemCenter, GetRandomEnumValue<PowerUpKind>());
+                PlaceGameObject(map, item);
+            }
+        }
+
+        private static T GetRandomEnumValue<T>()
+        {
+            var rnd = new Random();
+            var values = Enum.GetValues(typeof(T));
+            return (T)values.GetValue(rnd.Next(values.Length));
         }
 
         private static bool IsCreate(int chance)
