@@ -29,12 +29,10 @@ namespace nyan_cat
             var dx = (int)Velocity.X;
             var dy = (int)Velocity.Y;
             IsAlive = LeftTopCorner.X + Width > Math.Abs(dx);
-            if (!IsAlive)
-                return;
             if (LeftTopCorner.X + dx < 0)
             {
-                Width -= dx;
-                dx = dx / 2 + 2;
+                Width += dx;
+                dx = 0;
             }
             LeftTopCorner = new Point(LeftTopCorner.X + dx,
                 LeftTopCorner.Y + dy);
@@ -42,7 +40,7 @@ namespace nyan_cat
 
         public override string ToString()
         {
-            return $"Platform ({LeftTopCorner.X}, {LeftTopCorner.Y})";
+            return $"Platform ({LeftTopCorner.X}, {LeftTopCorner.Y}, {Width})";
         }
     }
 }
