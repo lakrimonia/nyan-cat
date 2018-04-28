@@ -8,30 +8,28 @@ using System.Threading.Tasks;
 
 namespace nyan_cat
 {
-    public enum GemKind
+    public enum PowerUpKind
     {
-        DoubleCombo,
-        Invulnerable,
-        MilkLongLife
+
     }
 
-    public class Gem : IGameObject
+    public class PowerUp : IGameObject
     {
-        public GemKind Kind { get; }
+        public PowerUpKind Kind { get; }
         public Vector2 Velocity { get; }
         public Point LeftTopCorner { get; private set; }
         public int Height { get; }
         public int Width { get; }
         public bool IsAlive { get; private set; }
 
-        public Gem(Point leftTopCorner, GemKind kind)
+        public PowerUp(Point leftTopCorner, PowerUpKind kind)
         {
             if (leftTopCorner.X < 0 || leftTopCorner.Y < 0
                 || leftTopCorner.X > 1000 || leftTopCorner.Y > 788)
                 throw new ArgumentException();
-            LeftTopCorner = leftTopCorner;
             Kind = kind;
             Velocity = new Vector2(-1, 0);
+            LeftTopCorner = leftTopCorner;
             Height = 50;
             Width = 50;
             IsAlive = true;
@@ -48,7 +46,7 @@ namespace nyan_cat
 
         public override string ToString()
         {
-            return $"Gem ({LeftTopCorner.X}, {LeftTopCorner.Y})";
+            return $"PowerUp ({LeftTopCorner.X}, {LeftTopCorner.Y})";
         }
     }
 }
