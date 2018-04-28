@@ -12,15 +12,15 @@ namespace nyan_cat
     {
         public int Combo = 1;
         public Vector2 Velocity { get; }
-        public Point Center { get; private set; }
+        public Point LeftTopCorner { get; private set; }
         public int Height { get; }
         public int Width { get; }
         public bool IsAlive { get; private set; }
 
-        public Milk(Point center)
+        public Milk(Point leftTopCorner)
         {
             Velocity = new Vector2(-1, 0);
-            Center = center;
+            LeftTopCorner = leftTopCorner;
             Height = 50;
             Width = 50;
             IsAlive = true;
@@ -28,13 +28,14 @@ namespace nyan_cat
 
         public void Move()
         {
-            var dx = (int)Velocity.X;
-            var dy = (int)Velocity.Y;
-            IsAlive = Center.X - Width / 2 < 0;
-            if (!IsAlive)
-                return;
-            Center = new Point(Center.X + dx,
-                Center.Y + dy);
+            throw new NotImplementedException();
+            //var dx = (int)Velocity.X;
+            //var dy = (int)Velocity.Y;
+            //IsAlive = LeftTopCorner.X - Width / 2 < 0;
+            //if (!IsAlive)
+            //    return;
+            //LeftTopCorner = new Point(LeftTopCorner.X + dx,
+            //    LeftTopCorner.Y + dy);
         }
     }
 }

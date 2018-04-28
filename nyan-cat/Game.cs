@@ -37,7 +37,7 @@ namespace nyan_cat
                 gameObject.Move();
             }
             NyanCat.Move();
-            if (NyanCat.Center.Y <= 0)
+            if (NyanCat.LeftTopCorner.Y <= 0)
             {
                 IsOver = true;
                 return;

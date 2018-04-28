@@ -20,18 +20,18 @@ namespace nyan_cat
         public bool IsAlive { get; }
         public int Height { get; }
         public int Width { get; }
-        public Point Center { get; private set; }
+        public Point LeftTopCorner { get; private set; }
         public Vector2 Velocity { get; private set; }
         public CatState State;
         public Gem CurrentGem { get; }
         public PowerUp CurrentPowerUp { get; }
 
-        public NyanCat(Point center)
+        public NyanCat(Point leftTopCorner)
         {
             IsAlive = true;
             Height = 80;
             Width = 50;
-            Center = center;
+            LeftTopCorner = leftTopCorner;
             Velocity = new Vector2(0, 0);
         }
 
@@ -43,17 +43,18 @@ namespace nyan_cat
 
         public void Move()
         {
-            if (State == CatState.Fall)
-                Velocity = new Vector2(0, -10);
-            if (State == CatState.Run)
-                Velocity = new Vector2(0, 0);
-            if (Center.Y + (int)Velocity.Y <= 0)
-            {
-                Center = new Point(Center.X + (int)Velocity.X, 0);
-                State = CatState.Fall;
-            }
-            Center = new Point(Center.X + (int)Velocity.X,
-                Center.Y + (int)Velocity.Y);
+            throw new NotImplementedException();
+            //if (State == CatState.Fall)
+            //    Velocity = new Vector2(0, -10);
+            //if (State == CatState.Run)
+            //    Velocity = new Vector2(0, 0);
+            //if (LeftTopCorner.Y + (int)Velocity.Y <= 0)
+            //{
+            //    LeftTopCorner = new Point(LeftTopCorner.X + (int)Velocity.X, 0);
+            //    State = CatState.Fall;
+            //}
+            //LeftTopCorner = new Point(LeftTopCorner.X + (int)Velocity.X,
+            //    LeftTopCorner.Y + (int)Velocity.Y);
         }
     }
 }

@@ -19,14 +19,14 @@ namespace nyan_cat
     {
         public GemKind Kind { get; }
         public Vector2 Velocity { get; }
-        public Point Center { get; }
+        public Point LeftTopCorner { get; }
         public int Height { get; }
         public int Width { get; }
         public bool IsAlive { get; }
 
-        public Gem(Point center, GemKind kind)
+        public Gem(Point leftTopCorner, GemKind kind)
         {
-            Center = center;
+            LeftTopCorner = leftTopCorner;
             Kind = kind;
             Velocity = new Vector2(-1, 0);
             Height = 50;

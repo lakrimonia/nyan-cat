@@ -10,9 +10,10 @@ namespace nyan_cat
 {
     public static class MapCreator
     {
-        private const int GameWidth = 1000;
-        private const int GameHeight = 788;
+        public const int GameWidth = 1000;
+        public const int GameHeight = 788;
         private const int PlatformHeight = 26;
+        private const int BombHeight = 25;
         private const int OtherObjectSize = 50;
 
         public static Map CreateRandomMap()
@@ -31,8 +32,8 @@ namespace nyan_cat
         {
             foreach (var p in GeneratePlatforms(map, x))
             {
-                var platformCenter = new Point(x + p.Value / 2, p.Key - PlatformHeight / 2);
-                var platform = new Platform(platformCenter, p.Value);
+                var leftTopCorner = new Point(x, p.Key);
+                var platform = new Platform(leftTopCorner, p.Value);
                 var bomb = GenerateBomb(platform);
                 PlaceGameObject(map, platform);
                 if (bomb != null)
@@ -103,10 +104,13 @@ namespace nyan_cat
         private static Bomb GenerateBomb(Platform platform)
         {
             var isGenerateBomb = IsCreate(20);
-            return isGenerateBomb
-                ? new Bomb(new Point(platform.Center.X,
-                    platform.Center.Y + PlatformHeight / 2 + OtherObjectSize / 2))
-                : null;
+            if (!isGenerateBomb)
+                return null;
+            var rnd = new Random();
+            var x = rnd.Next(platform.LeftTopCorner.X,
+                platform.LeftTopCorner.X + platform.Width - OtherObjectSize);
+            var y = platform.LeftTopCorner.Y - BombHeight;
+            return new Bomb(new Point(x, y));
         }
 
         private static Dictionary<int, int> GeneratePlatforms(Map map, int x)
@@ -152,10 +156,10 @@ namespace nyan_cat
         private static void PlaceGameObject(Map map, IGameObject gameObject)
         {
             map.GameObjects.Add(gameObject);
-            var beginX = gameObject.Center.X - gameObject.Width / 2;
-            var endX = gameObject.Center.X + gameObject.Width / 2;
-            var beginY = gameObject.Center.Y - gameObject.Height / 2;
-            var endY = gameObject.Center.Y + gameObject.Height / 2;
+            var beginX = gameObject.LeftTopCorner.X;
+            var endX = gameObject.LeftTopCorner.X + gameObject.Width;
+            var beginY = gameObject.LeftTopCorner.Y;
+            var endY = gameObject.LeftTopCorner.Y + gameObject.Height;
             for (var y = beginY; y < endY + 1; y++)
                 for (var x = beginX; x < endX + 1; x++)
                     map.Field[x, y] = gameObject;

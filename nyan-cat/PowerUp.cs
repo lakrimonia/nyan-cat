@@ -17,16 +17,16 @@ namespace nyan_cat
     {
         public PowerUpKind Kind { get; }
         public Vector2 Velocity { get; }
-        public Point Center { get; }
+        public Point LeftTopCorner { get; }
         public int Height { get; }
         public int Width { get; }
         public bool IsAlive { get; }
 
-        public PowerUp(Point center, PowerUpKind kind)
+        public PowerUp(Point leftTopCorner, PowerUpKind kind)
         {
             Kind = kind;
             Velocity = new Vector2(-1, 0);
-            Center = center;
+            LeftTopCorner = leftTopCorner;
             Height = 50;
             Width = 50;
             IsAlive = true;
