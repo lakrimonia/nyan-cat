@@ -13,7 +13,7 @@ namespace nyan_cat
         public int Score { get; private set; }
 
         private int combo;
-        public int Combo => NyanCat.CurrentGem.Kind == GemKind.DoubleCombo 
+        public int Combo => NyanCat.CurrentGem.Kind == GemKind.DoubleCombo
             ? combo * 2 : combo;
 
         public bool IsOver { get; private set; }
@@ -42,24 +42,42 @@ namespace nyan_cat
                 IsOver = true;
                 return;
             }
-            if (CatOnPlatform())
+            if (IsCatOnPlatform())
                 NyanCat.State = CatState.Run;
-            var metObject = FindIntersectedObject(); 
-            if (!(metObject is null))
-                throw new Exception(); // Активировать объект
+            var metObject = FindIntersectedObject();
+            switch (metObject)
+            {
+                case Milk _:
+                    combo += (metObject as Milk).Combo;
+                    break;
+                case Food _:
+                    Score += Food.Points * Combo;
+                    break;
+                case Bomb _:
+                    if (NyanCat.CurrentGem.Kind != GemKind.Invulnerable)
+                        IsOver = true;
+                    break;
+                case PowerUp _:
+                    NyanCat.CurrentPowerUp = metObject as PowerUp;
+                    break;
+                case Gem _:
+                    Score += 10000;
+                    NyanCat.CurrentGem = metObject as Gem;
+                    break;
+            }
             Score += 1 * Combo;
         }
 
         private IGameObject FindIntersectedObject()
         {
-            // Ищет объект, с котормы пересеклась кошка.
+            // Ищет объект, с которым пересеклась кошка.
             //Если таких нет, возвращает null
-            throw new Exception();
+            throw new NotImplementedException();
         }
 
-        private bool CatOnPlatform()
+        private bool IsCatOnPlatform()
         {
-            throw new Exception();
+            throw new NotImplementedException();
         }
     }
 }
