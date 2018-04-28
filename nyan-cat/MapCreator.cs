@@ -51,7 +51,7 @@ namespace nyan_cat
                 {
                     var choice = rnd.Next(0, 1 + 1);
                     IGameObject item;
-                    var leftTopCorner = new Point(x + 50 * i, y);
+                    var leftTopCorner = new Point(x + 50 * i + 3, y);
                     if (choice == 1)
                         item = new Food(leftTopCorner);
                     else
