@@ -18,6 +18,9 @@ namespace nyan_cat
 
         public Bomb(Point leftTopCorner)
         {
+            if (leftTopCorner.X < 0 || leftTopCorner.Y < 0
+                || leftTopCorner.X > 1000 || leftTopCorner.Y > 788)
+                throw new ArgumentException();
             IsAlive = true;
             Width = 50;
             Height = 25;
@@ -31,7 +34,7 @@ namespace nyan_cat
             var dy = (int)Velocity.Y;
             LeftTopCorner = new Point(LeftTopCorner.X + dx,
                 LeftTopCorner.Y + dy);
-            IsAlive = LeftTopCorner.X < 0;
+            IsAlive = LeftTopCorner.X > 0;
         }
 
         public override string ToString()
