@@ -11,21 +11,14 @@ namespace nyan_cat.Tests
     [TestFixture]
     public class Platform_Tests
     {
-        [Test]
-        public void ZeroWidth()
+        [TestCase(1, 1, 0)]
+        [TestCase(1, 1, 10)]
+        [TestCase(-1, 1, 11)]
+        public void IncorrectCreation(int xCenter, int yCenter, int width)
         {
-            Assert.Throws<ArgumentNullException>(() => { CreatePlatform(1, 1, 0); });
+            Assert.Throws<ArgumentNullException>(() => { CreatePlatform(xCenter, yCenter, width); });
         }
-        [Test]
-        public void EvenWidth()
-        {
-            Assert.Throws<ArgumentNullException>(() => { CreatePlatform(1, 1, 10); });
-        }
-        [Test]
-        public void CenterOutField()
-        {
-            Assert.Throws<ArgumentNullException>(() => { CreatePlatform(-1, 1, 11); });
-        }
+
         [Test]
         public void CorrectCreation()
         {
