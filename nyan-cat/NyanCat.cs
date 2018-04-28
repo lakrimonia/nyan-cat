@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
@@ -17,17 +17,19 @@ namespace nyan_cat
 
     public class NyanCat : IGameObject
     {
-        public bool IsAlive { get; }
+        public bool IsAlive { get; private set; }
         public int Height { get; }
         public int Width { get; }
         public Point LeftTopCorner { get; private set; }
         public Vector2 Velocity { get; private set; }
-        public CatState State;
+        public CatState State { get; set; }
         public Gem CurrentGem { get; set; }
         public PowerUp CurrentPowerUp { get; set; }
 
         public NyanCat(Point leftTopCorner)
         {
+            if (leftTopCorner.X < 0 || leftTopCorner.Y < 0)
+                throw new ArgumentException();
             IsAlive = true;
             Height = 80;
             Width = 50;
@@ -37,24 +39,32 @@ namespace nyan_cat
 
         public void Jump()
         {
-            Velocity = new Vector2(0, 10);
+            Velocity = new Vector2(0, -10);
             State = CatState.Jump;
         }
 
         public void Move()
         {
-            throw new NotImplementedException();
-            //if (State == CatState.Fall)
-            //    Velocity = new Vector2(0, -10);
-            //if (State == CatState.Run)
-            //    Velocity = new Vector2(0, 0);
-            //if (LeftTopCorner.Y + (int)Velocity.Y <= 0)
-            //{
-            //    LeftTopCorner = new Point(LeftTopCorner.X + (int)Velocity.X, 0);
-            //    State = CatState.Fall;
-            //}
-            //LeftTopCorner = new Point(LeftTopCorner.X + (int)Velocity.X,
-            //    LeftTopCorner.Y + (int)Velocity.Y);
+            if (State == CatState.Fall)
+                Velocity = new Vector2(0, 10);
+            if (State == CatState.Run)
+                Velocity = new Vector2(0, 0);
+            if (LeftTopCorner.Y + (int)Velocity.Y < 0)
+            {
+                LeftTopCorner = new Point(LeftTopCorner.X + (int)Velocity.X, 0);
+                State = CatState.Fall;
+                return;
+            }
+            LeftTopCorner = new Point(LeftTopCorner.X + (int)Velocity.X,
+                LeftTopCorner.Y + (int)Velocity.Y);
+
+            if (LeftTopCorner.Y >= 788)
+                IsAlive = false;
+        }
+
+        public override string ToString()
+        {
+            return $"NyanCat({LeftTopCorner.X}, {LeftTopCorner.Y}), State =  {State}, Velocity = {Velocity}";
         }
     }
 }
