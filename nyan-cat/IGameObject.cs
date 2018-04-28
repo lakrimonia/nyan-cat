@@ -11,7 +11,7 @@ namespace nyan_cat
     public interface IGameObject
     {
         Vector2 Velocity { get; }
-        Point Center { get; }
+        Point LeftTopCorner { get; }
         int Height { get; }
         int Width { get; }
         bool IsAlive { get; }
