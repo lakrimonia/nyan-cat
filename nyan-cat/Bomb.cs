@@ -11,17 +11,17 @@ namespace nyan_cat
     public class Bomb : IGameObject
     {
         public Vector2 Velocity { get; }
-        public Point Center { get; private set; }
+        public Point LeftTopCorner { get; private set; }
         public int Height { get; }
         public int Width { get; }
         public bool IsAlive { get; private set; }
 
-        public Bomb(Point center)
+        public Bomb(Point leftTopCorner)
         {
             IsAlive = true;
             Width = 50;
             Height = 25;
-            Center = center;
+            LeftTopCorner = leftTopCorner;
             Velocity = new Vector2(-1, 0);
         }
 
@@ -29,11 +29,9 @@ namespace nyan_cat
         {
             var dx = (int)Velocity.X;
             var dy = (int)Velocity.Y;
-            IsAlive = Center.X - Width / 2 < 0;
-            if (!IsAlive)
-                return;
-            Center = new Point(Center.X + dx,
-                Center.Y + dy);
+            LeftTopCorner = new Point(LeftTopCorner.X + dx,
+                LeftTopCorner.Y + dy);
+            IsAlive = LeftTopCorner.X < 0;
         }
     }
 }
