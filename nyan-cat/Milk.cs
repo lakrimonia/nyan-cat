@@ -19,6 +19,9 @@ namespace nyan_cat
 
         public Milk(Point leftTopCorner)
         {
+            if (leftTopCorner.X < 0 || leftTopCorner.Y < 0
+                || leftTopCorner.X > 1000 || leftTopCorner.Y > 788)
+                throw new ArgumentException();
             Velocity = new Vector2(-1, 0);
             LeftTopCorner = leftTopCorner;
             Height = 50;
@@ -28,14 +31,11 @@ namespace nyan_cat
 
         public void Move()
         {
-            throw new NotImplementedException();
-            //var dx = (int)Velocity.X;
-            //var dy = (int)Velocity.Y;
-            //IsAlive = LeftTopCorner.X - Width / 2 < 0;
-            //if (!IsAlive)
-            //    return;
-            //LeftTopCorner = new Point(LeftTopCorner.X + dx,
-            //    LeftTopCorner.Y + dy);
+            var dx = (int)Velocity.X;
+            var dy = (int)Velocity.Y;
+            LeftTopCorner = new Point(LeftTopCorner.X + dx,
+                LeftTopCorner.Y + dy);
+            IsAlive = LeftTopCorner.X > 0;
         }
 
         public override string ToString()
