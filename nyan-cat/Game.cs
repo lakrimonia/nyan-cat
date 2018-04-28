@@ -17,13 +17,15 @@ namespace nyan_cat
             ? combo * 2 : combo;
 
         public bool IsOver { get; private set; }
-        public IGameObject[,] Map { get; }
+        public IGameObject[,] Field { get; }
         public List<IGameObject> GameObjects { get; private set; }
 
         public Game()
         {
             NyanCat = new NyanCat(new Point(0, 0));
-            Map = MapCreator.CreateRandomMap();
+            var map = MapCreator.CreateRandomMap();
+            Field = map.Field;
+            GameObjects = map.GameObjects;
             Score = 0;
             IsOver = false;
         }

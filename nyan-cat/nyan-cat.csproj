@@ -55,6 +55,7 @@
     <Compile Include="Game.cs" />
     <Compile Include="Gem.cs" />
     <Compile Include="IGameObject.cs" />
+    <Compile Include="Map.cs" />
     <Compile Include="MapCreator.cs" />
     <Compile Include="Milk.cs" />
     <Compile Include="MyForm.cs">

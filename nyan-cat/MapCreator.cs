@@ -15,9 +15,9 @@ namespace nyan_cat
         private const int PlatformHeight = 26;
         private const int OtherObjectSize = 50;
 
-        public static IGameObject[,] CreateRandomMap()
+        public static Map CreateRandomMap()
         {
-            var map = new IGameObject[GameWidth, GameHeight];
+            var map = new Map(GameWidth, GameHeight);
             for (var x = 0; x <= GameWidth - 200; x += 250)
             {
                 PlacePlatformsAndBombs(map, x);
@@ -27,7 +27,7 @@ namespace nyan_cat
             return map;
         }
 
-        private static void PlacePlatformsAndBombs(IGameObject[,] map, int x)
+        private static void PlacePlatformsAndBombs(Map map, int x)
         {
             foreach (var p in GeneratePlatforms(map, x))
             {
@@ -40,7 +40,7 @@ namespace nyan_cat
             }
         }
 
-        private static void PlaceFoodAndMilk(IGameObject[,] map, int x)
+        private static void PlaceFoodAndMilk(Map map, int x)
         {
             for (var y = 0; y < GameHeight - 100; y += 50 + PlatformHeight)
             {
@@ -89,7 +89,7 @@ namespace nyan_cat
                 : null;
         }
 
-        private static Dictionary<int, int> GeneratePlatforms(IGameObject[,] map, int x)
+        private static Dictionary<int, int> GeneratePlatforms(Map map, int x)
         {
             var result = new Dictionary<int, int>(); // <y, width>
             var ys = GetYs(50, GameHeight - 100, 50);
@@ -97,7 +97,7 @@ namespace nyan_cat
             ys = ys.OrderBy(item => rnd.Next(650 / 50));
             foreach (var y in ys)
             {
-                if (map[x, y] == null)
+                if (map.Field[x, y] == null)
                 {
                     var width = Math.Min(rnd.Next(100 - 1, 400), GameWidth - x);
                     if (width % 2 == 0)
@@ -121,23 +121,24 @@ namespace nyan_cat
             }
         }
 
-        public static IGameObject[,] CreateMap(int width, int height, params IGameObject[] gameObjects)
+        public static Map CreateMap(int width, int height, params IGameObject[] gameObjects)
         {
-            var map = new IGameObject[width, height];
+            var map = new Map(width, height);
             foreach (var gameObject in gameObjects)
                 PlaceGameObject(map, gameObject);
             return map;
         }
 
-        private static void PlaceGameObject(IGameObject[,] map, IGameObject gameObject)
+        private static void PlaceGameObject(Map map, IGameObject gameObject)
         {
+            map.GameObjects.Add(gameObject);
             var beginX = gameObject.Center.X - gameObject.Width / 2;
             var endX = gameObject.Center.X + gameObject.Width / 2;
             var beginY = gameObject.Center.Y - gameObject.Height / 2;
             var endY = gameObject.Center.Y + gameObject.Height / 2;
             for (var y = beginY; y < endY + 1; y++)
                 for (var x = beginX; x < endX + 1; x++)
-                    map[x, y] = gameObject;
+                    map.Field[x, y] = gameObject;
         }
     }
 }
