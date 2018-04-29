@@ -38,6 +38,8 @@ namespace nyan_cat
                 LeftTopCorner.Y + dy);
         }
 
+        public void Kill() => IsAlive = false;
+
         public override string ToString()
         {
             return $"Platform ({LeftTopCorner.X}, {LeftTopCorner.Y}, {Width})";

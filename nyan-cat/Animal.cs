@@ -54,6 +54,8 @@ namespace nyan_cat
                 platform.LeftTopCorner.Y - Height);
         }
 
+        public void Kill() => IsAlive = false;
+
         public override string ToString()
         {
             return $"Animal ({LeftTopCorner.X}, {LeftTopCorner.Y})";

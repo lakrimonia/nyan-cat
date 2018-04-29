@@ -45,6 +45,15 @@ namespace nyan_cat
 
         public void Update()
         {
+            if (NyanCat.CurrentPowerUp?.Kind == PowerUpKind.LoveNyan)
+            {
+                var enemyOrBomb = FindNearestEnemyOrBomb();
+                if (enemyOrBomb != null)
+                {
+                    enemyOrBomb.Kill();
+                    Score += 1000;
+                }
+            }
             foreach (var gameObject in GameObjects)
             {
                 gameObject.Move();
@@ -62,22 +71,28 @@ namespace nyan_cat
             {
                 case Milk _:
                     combo += (metObject as Milk).Combo * MilkGlassesCombo;
+                    metObject.Kill();
                     break;
                 case Food _:
                     if (NyanCat.CurrentPowerUp.Kind == PowerUpKind.MilkGlasses)
                         combo += MilkGlassesCombo;
                     Score += Food.Points * Combo;
+                    metObject.Kill();
                     break;
                 case Bomb _:
                     if (IsInvulnerable())
                         IsOver = true;
                     break;
                 case PowerUp _:
-                    NyanCat.CurrentPowerUp = metObject as PowerUp;
+                    var powerUp = metObject as PowerUp;
+                    NyanCat.CurrentPowerUp = new PowerUp(powerUp.LeftTopCorner, powerUp.Kind);
+                    metObject.Kill();
                     break;
                 case Gem _:
                     Score += 10000;
-                    NyanCat.CurrentGem = metObject as Gem;
+                    var gem = metObject as Gem;
+                    NyanCat.CurrentGem = new Gem(gem.LeftTopCorner, gem.Kind);
+                    metObject.Kill();
                     break;
                 case IEnemy _:
                     if (IsInvulnerable())
@@ -115,6 +130,19 @@ namespace nyan_cat
         {
             return NyanCat.CurrentGem.Kind != GemKind.Invulnerable ||
                    NyanCat.CurrentPowerUp.Kind != PowerUpKind.BigNyan;
+        }
+
+        private IGameObject FindNearestEnemyOrBomb()
+        {
+            return GameObjects
+                .Where(e => e is IEnemy || e is Bomb)
+                .OrderBy(e => GetDistance(NyanCat.LeftTopCorner, e.LeftTopCorner))
+                .FirstOrDefault();
+        }
+
+        private double GetDistance(Point p1, Point p2)
+        {
+            return Math.Sqrt((p2.X - p1.X) * (p2.X - p1.X) + (p2.Y - p1.Y) * (p2.Y - p1.Y));
         }
     }
 }

@@ -36,5 +36,7 @@ namespace nyan_cat
                 LeftTopCorner.Y + dy);
             IsAlive = LeftTopCorner.X > 0;
         }
+
+        public void Kill() => IsAlive = false;
     }
 }

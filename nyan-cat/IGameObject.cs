@@ -17,5 +17,6 @@ namespace nyan_cat
         bool IsAlive { get; }
 
         void Move();
+        void Kill();
     }
 }

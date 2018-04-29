@@ -73,6 +73,8 @@ namespace nyan_cat
                 IsAlive = false;
         }
 
+        public void Kill() => IsAlive = false;
+
         public override string ToString()
         {
             return $"NyanCat({LeftTopCorner.X}, {LeftTopCorner.Y}), State =  {State}, Velocity = {Velocity}";

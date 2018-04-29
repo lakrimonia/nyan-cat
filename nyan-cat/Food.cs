@@ -38,6 +38,8 @@ namespace nyan_cat
             IsAlive = LeftTopCorner.X > 0;
         }
 
+        public void Kill() => IsAlive = false;
+
         public override string ToString()
         {
             return $"Food ({LeftTopCorner.X}, {LeftTopCorner.Y})";
