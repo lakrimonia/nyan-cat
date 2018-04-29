@@ -39,5 +39,19 @@ namespace nyan_cat.Tests
             food.Move();
             Assert.AreEqual(food, game.FindIntersectedObject());
         }
+
+        [Test]
+        public void MilkGlasses()
+        {
+            var food = new Food(new Point(250, 150));
+            var map = MapCreator.CreateMap(400, 400);
+            var game = new Game(100, 120, map)
+            {
+                NyanCat = {CurrentPowerUp = new PowerUp(new Point(0, 0), PowerUpKind.MilkGlasses)}
+            };
+            food.Move();
+            food.Move();
+            food.Move();
+        }
     }
 }

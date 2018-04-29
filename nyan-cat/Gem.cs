@@ -48,7 +48,7 @@ namespace nyan_cat
 
         public override string ToString()
         {
-            return $"PowerUp ({LeftTopCorner.X}, {LeftTopCorner.Y})";
+            return $"{Kind} ({LeftTopCorner.X}, {LeftTopCorner.Y})";
         }
     }
 }

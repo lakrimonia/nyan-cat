@@ -8,18 +8,20 @@ using System.Threading.Tasks;
 namespace nyan_cat
 {
     public class Game
-    { 
+    {
         public NyanCat NyanCat { get; private set; }
         public int Score { get; private set; }
 
         private int combo;
-        public int Combo => combo;
-        //public int Combo => NyanCat.CurrentGem.Kind == GemKind.DoubleCombo
-        //    ? combo * 2 : combo;
+        //public int Combo => combo;
+        public int Combo => NyanCat.CurrentGem?.Kind == GemKind.DoubleCombo
+            ? combo * 2 : combo;
 
         public bool IsOver { get; private set; }
         public IGameObject[,] Field { get; }
         public List<IGameObject> GameObjects { get; private set; }
+
+        public int MilkGlassesCombo => NyanCat.CurrentPowerUp.Kind == PowerUpKind.MilkGlasses ? 2 : 1;
 
         public Game(int catLeftTopCornerX, int catLeftTopCornerY)
         {
@@ -58,9 +60,11 @@ namespace nyan_cat
             switch (metObject)
             {
                 case Milk _:
-                    combo += (metObject as Milk).Combo;
+                    combo += (metObject as Milk).Combo * MilkGlassesCombo;
                     break;
                 case Food _:
+                    if (NyanCat.CurrentPowerUp.Kind == PowerUpKind.MilkGlasses)
+                        combo += MilkGlassesCombo;
                     Score += Food.Points * Combo;
                     break;
                 case Bomb _:
@@ -88,7 +92,7 @@ namespace nyan_cat
 
         public IGameObject FindIntersectedObject()
         {
-              var beginX = NyanCat.LeftTopCorner.X;
+            var beginX = NyanCat.LeftTopCorner.X;
             var endX = NyanCat.LeftTopCorner.X + NyanCat.Width;
             var beginY = NyanCat.LeftTopCorner.Y;
             var endY = NyanCat.LeftTopCorner.Y + NyanCat.Height;

@@ -10,7 +10,7 @@ namespace nyan_cat
 {
     public enum PowerUpKind
     {
-        TurboNyan
+        TurboNyan, MilkGlasses
     }
 
     public class PowerUp : IGameObject
@@ -46,7 +46,7 @@ namespace nyan_cat
 
         public override string ToString()
         {
-            return $"PowerUp ({LeftTopCorner.X}, {LeftTopCorner.Y})";
+            return $"{Kind} ({LeftTopCorner.X}, {LeftTopCorner.Y})";
         }
     }
 }
