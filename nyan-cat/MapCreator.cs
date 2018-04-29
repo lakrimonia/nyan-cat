@@ -21,23 +21,26 @@ namespace nyan_cat
             var map = new Map(GameWidth, GameHeight);
             for (var x = 0; x <= GameWidth - 200; x += 250)
             {
-                PlacePlatformsAndBombs(map, x);
+                PlacePlatformsBombsAndEnemies(map, x);
                 PlaceFoodAndMilk(map, x);
                 PlacePowerUpOrGem(map, x);
             }
             return map;
         }
 
-        private static void PlacePlatformsAndBombs(Map map, int x)
+        private static void PlacePlatformsBombsAndEnemies(Map map, int x)
         {
             foreach (var p in GeneratePlatforms(map, x))
             {
                 var leftTopCorner = new Point(x, p.Key);
                 var platform = new Platform(leftTopCorner, p.Value);
                 var bomb = GenerateBomb(platform);
+                var enemy = GenerateEnemy(platform);
                 PlaceGameObject(map, platform);
                 if (bomb != null)
                     PlaceGameObject(map, bomb);
+                if (enemy != null)
+                    PlaceGameObject(map, enemy);
             }
         }
 
@@ -110,6 +113,22 @@ namespace nyan_cat
                 platform.LeftTopCorner.X + platform.Width - OtherObjectSize);
             var y = platform.LeftTopCorner.Y - BombHeight;
             return new Bomb(new Point(x, y));
+        }
+
+        private static IEnemy GenerateEnemy(Platform platform)
+        {
+            if (!IsCreate(15))
+                return null;
+            var rnd = new Random();
+            var AnimalOrUFO = rnd.Next(0, 1 + 1);
+            IEnemy item;
+            if (AnimalOrUFO == 0)
+                item = new UFO(
+                    new Point(platform.LeftTopCorner.X - platform.Width + OtherObjectSize,
+                        platform.LeftTopCorner.Y - OtherObjectSize));
+            else
+                item = new Animal(platform);
+            return item;
         }
 
         private static Dictionary<int, int> GeneratePlatforms(Map map, int x)

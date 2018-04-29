@@ -19,6 +19,7 @@ namespace nyan_cat.Tests
                 CowsMustBeRare(map);
                 GemsMustBeRare(map);
                 PowerUpsMustBeRare(map);
+                EnemiesMustBeRare(map);
             }
         }
         
@@ -38,6 +39,12 @@ namespace nyan_cat.Tests
         {
             var powerUpsCount = map.GameObjects.Count(e => e is PowerUp);
             Assert.LessOrEqual(powerUpsCount, 3, "Power ups must be rare!");
+        }
+
+        public void EnemiesMustBeRare(Map map)
+        {
+            var enemiesCount = map.GameObjects.Count(e => e is IEnemy);
+            Assert.LessOrEqual(enemiesCount, 3, "Enemies must be rare!");
         }
     }
 }
