@@ -120,7 +120,7 @@ namespace nyan_cat.Tests
             game.Update();
             game.Update();
             game.Update();
-
+            Assert.GreaterOrEqual(game.Score, 100);
         }
 
         #endregion

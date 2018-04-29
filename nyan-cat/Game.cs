@@ -23,7 +23,15 @@ namespace nyan_cat
         public List<IGameObject> GameObjects { get; private set; }
         private bool wasSpeedUp;
 
-        public int MilkGlassesCombo => NyanCat.CurrentPowerUp.Kind == PowerUpKind.MilkGlasses ? 2 : 1;
+        public int MilkGlassesCombo =>
+            NyanCat.CurrentPowerUp.Kind == PowerUpKind.MilkGlasses
+                ? 2
+                : 1;
+
+        public int BigNyanMultiplier =>
+            NyanCat.CurrentPowerUp.Kind == PowerUpKind.BigNyan
+                ? 2
+                : 1;
 
         public Game(int catLeftTopCornerX, int catLeftTopCornerY)
         {
@@ -56,6 +64,7 @@ namespace nyan_cat
                 if (enemyOrBomb != null)
                 {
                     enemyOrBomb.Kill();
+                    GameObjects.Remove(enemyOrBomb);
                     Score += 1000;
                 }
             }
@@ -107,7 +116,7 @@ namespace nyan_cat
                     UseGem(metObject);
                     break;
                 case IEnemy _:
-                    UseEnemy(metObject);
+                    UseEnemy();
                     break;
             }
             Score += 1 * Combo;
@@ -116,17 +125,16 @@ namespace nyan_cat
         public IGameObject FindIntersectedObject()
         {
             var beginX = NyanCat.LeftTopCorner.X;
-            var endX = NyanCat.LeftTopCorner.X + NyanCat.Width;
+            var endX = NyanCat.LeftTopCorner.X + NyanCat.Width * BigNyanMultiplier;
             var beginY = NyanCat.LeftTopCorner.Y;
-            var endY = NyanCat.LeftTopCorner.Y + NyanCat.Height;
+            var endY = NyanCat.LeftTopCorner.Y + NyanCat.Height * BigNyanMultiplier;
 
             return GameObjects
                 .Where(gObj => !(gObj is Platform))
-                .Where(gObj => gObj.LeftTopCorner.X <= endX
+                .FirstOrDefault(gObj => gObj.LeftTopCorner.X <= endX
                 && gObj.LeftTopCorner.Y <= endY
                 && gObj.LeftTopCorner.X + gObj.Width >= beginX
-                && gObj.LeftTopCorner.Y + gObj.Height >= beginY)
-                .FirstOrDefault();
+                && gObj.LeftTopCorner.Y + gObj.Height >= beginY);
         }
 
         private bool IsCatOnPlatform()
@@ -136,18 +144,17 @@ namespace nyan_cat
             var endX = NyanCat.LeftTopCorner.X + NyanCat.Height;
             var platformUnderCat = GameObjects
                 .Where(gObj => gObj is Platform)
-                .Where(gObj => gObj.LeftTopCorner.Y == startY &&
+                .FirstOrDefault(gObj => gObj.LeftTopCorner.Y == startY &&
                     gObj.LeftTopCorner.X <= endX &&
-                    gObj.LeftTopCorner.X + gObj.Width >= startX)
-                .FirstOrDefault();
+                    gObj.LeftTopCorner.X + gObj.Width >= startX);
             return !(platformUnderCat is null);
         }
 
         private void UseMilk(IGameObject metObject)
         {
             combo += metObject is Cow ? 25 * MilkGlassesCombo : 1 * MilkGlassesCombo;
-            //combo += (metObject as Milk).Combo * MilkGlassesCombo;
             metObject.Kill();
+            GameObjects.Remove(metObject);
         }
 
         private void UseFood(IGameObject metObject)
@@ -157,6 +164,7 @@ namespace nyan_cat
             else
                 Score += Food.Points * Combo;
             metObject.Kill();
+            GameObjects.Remove(metObject);
         }
 
         private void UseBomb()
@@ -170,6 +178,7 @@ namespace nyan_cat
             var powerUp = metObject as PowerUp;
             NyanCat.CurrentPowerUp = new PowerUp(powerUp.LeftTopCorner, powerUp.Kind);
             metObject.Kill();
+            GameObjects.Remove(metObject);
         }
 
         private void UseGem(IGameObject metObject)
@@ -178,9 +187,10 @@ namespace nyan_cat
             var gem = metObject as Gem;
             NyanCat.CurrentGem = new Gem(gem.LeftTopCorner, gem.Kind);
             metObject.Kill();
+            GameObjects.Remove(metObject);
         }
 
-        private void UseEnemy(IGameObject metObject)
+        private void UseEnemy()
         {
             if (!IsInvulnerable() &&
                 NyanCat.CurrentPowerUp?.Kind != PowerUpKind.DoggieNyan)
