@@ -147,7 +147,7 @@ namespace nyan_cat
 
         private void UseBomb()
         {
-            if (IsInvulnerable())
+            if (!IsInvulnerable())
                 IsOver = true;
         }
 
@@ -168,8 +168,8 @@ namespace nyan_cat
 
         private void UseEnemy(IGameObject metObject)
         {
-            if (IsInvulnerable() ||
-                NyanCat.CurrentPowerUp?.Kind == PowerUpKind.DoggieNyan)
+            if (!IsInvulnerable() &&
+                NyanCat.CurrentPowerUp?.Kind != PowerUpKind.DoggieNyan)
             {
                 Score -= 100; // TODO: позже придумаю нормальную формулу
                 if (NyanCat.CurrentGem.Kind != GemKind.MilkLongLife)
@@ -179,8 +179,8 @@ namespace nyan_cat
 
         private bool IsInvulnerable()
         {
-            return NyanCat.CurrentGem?.Kind != GemKind.Invulnerable ||
-                   NyanCat.CurrentPowerUp?.Kind != PowerUpKind.BigNyan;
+            return NyanCat.CurrentGem?.Kind == GemKind.Invulnerable ||
+                   NyanCat.CurrentPowerUp?.Kind == PowerUpKind.BigNyan;
         }
 
         private IGameObject FindNearestEnemyOrBomb()

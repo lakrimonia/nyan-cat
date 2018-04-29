@@ -11,7 +11,7 @@ namespace nyan_cat
     public class Milk : IGameObject
     {
         public int Combo = 1;
-        public Vector2 Velocity { get; }
+        public Vector2 Velocity { get; private set; }
         public Point LeftTopCorner { get; private set; }
         public int Height { get; }
         public int Width { get; }
@@ -39,6 +39,12 @@ namespace nyan_cat
         }
 
         public void Kill() => IsAlive = false;
+
+        public void Accelerate(Vector2 acceleration)
+        {
+            Velocity = new Vector2(Velocity.X + acceleration.X,
+                Velocity.Y + acceleration.Y);
+        }
 
         public override string ToString()
         {

@@ -20,7 +20,7 @@ namespace nyan_cat.Tests
         [Test]
         public void CorrectCreation()
         {
-            var powerUp= CreatePowerUp(3, 3);
+            var powerUp = CreatePowerUp(3, 3);
         }
 
         [Test]
@@ -70,8 +70,59 @@ namespace nyan_cat.Tests
             Assert.AreEqual(game.Combo, expCombo);
             Assert.AreEqual(game.Score, expCombo);
         }
-#endregion
+        #endregion
 
+        #region BigNyan
 
+        [Test]
+        public void BigNyanInvulnerable()
+        {
+            var enemy = new UFO(new Point(300, 250));
+            var bomb = new Bomb(new Point(300, 250));
+            var platform = new Platform(new Point(100, 300), 250);
+            BigNyanProtectedFromBombs(platform, bomb);
+            BigNyanProtectedFromEnemies(platform, enemy);
+        }
+
+        public void BigNyanProtectedFromEnemies(Platform platform, UFO enemy)
+        {
+            var cow = new Cow(new Point(250, 250));
+            var map = MapCreator.CreateMap(500, 500, cow, enemy, platform);
+            var game = new Game(219, 250, map);
+            game.NyanCat.CurrentPowerUp = new PowerUp(new Point(0, 0), PowerUpKind.BigNyan);
+            game.Update();
+            var score = game.Score;
+            var combo = game.Combo;
+            game.Update();
+            Assert.GreaterOrEqual(game.Combo, combo);
+            Assert.GreaterOrEqual(game.Score, score);
+        }
+
+        public void BigNyanProtectedFromBombs(Platform platform, Bomb bomb)
+        {
+            var map = MapCreator.CreateMap(500, 500, bomb, platform);
+            var game = new Game(219, 250, map);
+            game.NyanCat.CurrentPowerUp = new PowerUp(new Point(0, 0), PowerUpKind.BigNyan);
+            game.Update();
+            Assert.AreEqual(false, game.IsOver);
+        }
+
+        [Test]
+        public void BigNyanCollectsMoreFood()
+        {
+            var milk = new Milk(new Point(100, 190));
+            var cow = new Cow(new Point(180, 190));
+            var food = new Food(new Point(220, 250));
+            var platform = new Platform(new Point(100, 300), 250);
+            var map = MapCreator.CreateMap(500, 500, milk, cow, food, platform);
+            var game = new Game(100, 250, map);
+            game.NyanCat.CurrentPowerUp = new PowerUp(new Point(0, 0), PowerUpKind.BigNyan);
+            game.Update();
+            game.Update();
+            game.Update();
+
+        }
+
+        #endregion
     }
 }

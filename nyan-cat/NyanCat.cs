@@ -75,6 +75,12 @@ namespace nyan_cat
 
         public void Kill() => IsAlive = false;
 
+        public void Accelerate(Vector2 acceleration)
+        {
+            Velocity = new Vector2(Velocity.X + acceleration.X,
+                Velocity.Y + acceleration.Y);
+        }
+
         public override string ToString()
         {
             return $"NyanCat({LeftTopCorner.X}, {LeftTopCorner.Y}), State =  {State}, Velocity = {Velocity}";

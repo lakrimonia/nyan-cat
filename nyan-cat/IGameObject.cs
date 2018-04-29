@@ -18,5 +18,6 @@ namespace nyan_cat
 
         void Move();
         void Kill();
+        void Accelerate(Vector2 acceleration);
     }
 }
