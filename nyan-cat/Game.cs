@@ -65,44 +65,33 @@ namespace nyan_cat
                 IsOver = true;
                 return;
             }
+
             if (IsCatOnPlatform())
+            {
+                if (NyanCat.State != CatState.Run)
+                    combo += 2;
                 NyanCat.State = CatState.Run;
+            }
             var metObject = FindIntersectedObject();
             switch (metObject)
             {
                 case Milk _:
-                    combo += (metObject as Milk).Combo * MilkGlassesCombo;
-                    metObject.Kill();
+                    UseMilk(metObject);
                     break;
                 case Food _:
-                    if (NyanCat.CurrentPowerUp.Kind == PowerUpKind.MilkGlasses)
-                        combo += MilkGlassesCombo;
-                    Score += Food.Points * Combo;
-                    metObject.Kill();
+                    UseFood(metObject);
                     break;
                 case Bomb _:
-                    if (IsInvulnerable())
-                        IsOver = true;
+                    UseBomb();
                     break;
                 case PowerUp _:
-                    var powerUp = metObject as PowerUp;
-                    NyanCat.CurrentPowerUp = new PowerUp(powerUp.LeftTopCorner, powerUp.Kind);
-                    metObject.Kill();
+                    UsePowerUp(metObject);
                     break;
                 case Gem _:
-                    Score += 10000;
-                    var gem = metObject as Gem;
-                    NyanCat.CurrentGem = new Gem(gem.LeftTopCorner, gem.Kind);
-                    metObject.Kill();
+                    UseGem(metObject);
                     break;
                 case IEnemy _:
-                    if (IsInvulnerable() || 
-                        NyanCat.CurrentPowerUp?.Kind == PowerUpKind.DoggieNyan)
-                    {
-                        Score -= 100; // TODO: позже придумаю нормальную формулу
-                        if (NyanCat.CurrentGem.Kind != GemKind.MilkLongLife)
-                            combo = 1;
-                    }
+                    UseEnemy(metObject);
                     break;
             }
             Score += 1 * Combo;
@@ -126,6 +115,52 @@ namespace nyan_cat
         private bool IsCatOnPlatform()
         {
             throw new NotImplementedException();
+        }
+
+        private void UseMilk(IGameObject metObject)
+        {
+            combo += (metObject as Milk).Combo * MilkGlassesCombo;
+            metObject.Kill();
+        }
+
+        private void UseFood(IGameObject metObject)
+        {
+            if (NyanCat.CurrentPowerUp.Kind == PowerUpKind.MilkGlasses)
+                combo += MilkGlassesCombo;
+            Score += Food.Points * Combo;
+            metObject.Kill();
+        }
+
+        private void UseBomb()
+        {
+            if (IsInvulnerable())
+                IsOver = true;
+        }
+
+        private void UsePowerUp(IGameObject metObject)
+        {
+            var powerUp = metObject as PowerUp;
+            NyanCat.CurrentPowerUp = new PowerUp(powerUp.LeftTopCorner, powerUp.Kind);
+            metObject.Kill();
+        }
+
+        private void UseGem(IGameObject metObject)
+        {
+            Score += 10000;
+            var gem = metObject as Gem;
+            NyanCat.CurrentGem = new Gem(gem.LeftTopCorner, gem.Kind);
+            metObject.Kill();
+        }
+
+        private void UseEnemy(IGameObject metObject)
+        {
+            if (IsInvulnerable() ||
+                NyanCat.CurrentPowerUp?.Kind == PowerUpKind.DoggieNyan)
+            {
+                Score -= 100; // TODO: позже придумаю нормальную формулу
+                if (NyanCat.CurrentGem.Kind != GemKind.MilkLongLife)
+                    combo = 1;
+            }
         }
 
         private bool IsInvulnerable()
