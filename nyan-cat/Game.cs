@@ -45,6 +45,8 @@ namespace nyan_cat
 
         public void Update()
         {
+            if (NyanCat.CurrentPowerUp?.Kind == PowerUpKind.FloristNyan && NyanCat.State == CatState.Run)
+                combo += 1;
             if (NyanCat.CurrentPowerUp?.Kind == PowerUpKind.LoveNyan)
             {
                 var enemyOrBomb = FindNearestEnemyOrBomb();
