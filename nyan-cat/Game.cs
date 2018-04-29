@@ -7,27 +7,34 @@ using System.Threading.Tasks;
 
 namespace nyan_cat
 {
-    public class Game
-    {
-        public NyanCat NyanCat { get; private set; }
+    public NyanCat NyanCat { get; private set; }
         public int Score { get; private set; }
 
         private int combo;
-        public int Combo => NyanCat.CurrentGem.Kind == GemKind.DoubleCombo
-            ? combo * 2 : combo;
+        public int Combo => combo;
+        //public int Combo => NyanCat.CurrentGem.Kind == GemKind.DoubleCombo
+        //    ? combo * 2 : combo;
 
         public bool IsOver { get; private set; }
         public IGameObject[,] Field { get; }
         public List<IGameObject> GameObjects { get; private set; }
 
-        public Game()
+        public Game(int catLeftTopCornerX, int catLeftTopCornerY)
         {
-            NyanCat = new NyanCat(new Point(0, 0));
+            NyanCat = new NyanCat(new Point(catLeftTopCornerX, catLeftTopCornerY));
             var map = MapCreator.CreateRandomMap();
             Field = map.Field;
             GameObjects = map.GameObjects;
             Score = 0;
-            combo = 1;
+            IsOver = false;
+        }
+
+        public Game(int catLeftTopCornerX, int catLeftTopCornerY, Map map)
+        {
+            NyanCat = new NyanCat(new Point(catLeftTopCornerX, catLeftTopCornerY));
+            Field = map.Field;
+            GameObjects = map.GameObjects;
+            Score = 0;
             IsOver = false;
         }
 
@@ -79,9 +86,17 @@ namespace nyan_cat
 
         private IGameObject FindIntersectedObject()
         {
-            // Ищет объект, с которым пересеклась кошка.
-            //Если таких нет, возвращает null
-            throw new NotImplementedException();
+              var beginX = NyanCat.LeftTopCorner.X;
+            var endX = NyanCat.LeftTopCorner.X + NyanCat.Width;
+            var beginY = NyanCat.LeftTopCorner.Y;
+            var endY = NyanCat.LeftTopCorner.Y + NyanCat.Height;
+
+            return GameObjects
+                .Where(gObj => gObj.LeftTopCorner.X <= endX
+                && gObj.LeftTopCorner.Y <= endY
+                && gObj.LeftTopCorner.X + gObj.Width >= beginX
+                && gObj.LeftTopCorner.Y + gObj.Height >= beginY)
+                .FirstOrDefault();
         }
 
         private bool IsCatOnPlatform()
