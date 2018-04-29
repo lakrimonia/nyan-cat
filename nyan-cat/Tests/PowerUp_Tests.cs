@@ -49,5 +49,29 @@ namespace nyan_cat.Tests
             for (var i = 0; i < count; i++)
                 powerUp.Move();
         }
+
+        #region MilkGlasses
+        [Test]
+        public void MilkGlasses()
+        {
+            MilkGlasses(new Food(new Point(181, 150)), 3);
+            MilkGlasses(new Milk(new Point(181, 150)), 3);
+            MilkGlasses(new Cow(new Point(181, 150)), 51);
+        }
+
+        public void MilkGlasses(IGameObject gameObject, int expCombo)
+        {
+            var map = MapCreator.CreateMap(400, 400, new Platform(new Point(100, 200), 200), gameObject);
+            var game = new Game(100, 150, map)
+            {
+                NyanCat = { CurrentPowerUp = new PowerUp(new Point(0, 0), PowerUpKind.MilkGlasses) }
+            };
+            game.Update();
+            Assert.AreEqual(game.Combo, expCombo);
+            Assert.AreEqual(game.Score, expCombo);
+        }
+#endregion
+
+
     }
 }

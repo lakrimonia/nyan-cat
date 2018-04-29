@@ -30,6 +30,7 @@ namespace nyan_cat
             Field = map.Field;
             GameObjects = map.GameObjects;
             Score = 0;
+            combo = 1;
             IsOver = false;
         }
 
@@ -39,6 +40,7 @@ namespace nyan_cat
             Field = map.Field;
             GameObjects = map.GameObjects;
             Score = 0;
+            combo = 1;
             IsOver = false;
         }
 
@@ -129,7 +131,8 @@ namespace nyan_cat
 
         private void UseMilk(IGameObject metObject)
         {
-            combo += (metObject as Milk).Combo * MilkGlassesCombo;
+            combo += metObject is Cow ? 25 * MilkGlassesCombo : 1 * MilkGlassesCombo;
+            //combo += (metObject as Milk).Combo * MilkGlassesCombo;
             metObject.Kill();
         }
 
@@ -137,7 +140,8 @@ namespace nyan_cat
         {
             if (NyanCat.CurrentPowerUp.Kind == PowerUpKind.MilkGlasses)
                 combo += MilkGlassesCombo;
-            Score += Food.Points * Combo;
+            else
+                Score += Food.Points * Combo;
             metObject.Kill();
         }
 

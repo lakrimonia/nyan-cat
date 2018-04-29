@@ -20,17 +20,17 @@ namespace nyan_cat
         public bool IsAlive { get; private set; }
 
         public int Height => CurrentPowerUp?.Kind == PowerUpKind.BigNyan
-            ? 80 * 2
-            : 80;
-
-        public int Width => CurrentPowerUp?.Kind == PowerUpKind.BigNyan
             ? 50 * 2
             : 50;
+
+        public int Width => CurrentPowerUp?.Kind == PowerUpKind.BigNyan
+            ? 80 * 2
+            : 80;
 
         private Point leftTopCorner;
 
         public Point LeftTopCorner => CurrentPowerUp?.Kind == PowerUpKind.BigNyan
-            ? new Point(leftTopCorner.X, leftTopCorner.Y - 80)
+            ? new Point(leftTopCorner.X, leftTopCorner.Y - 50)
             : leftTopCorner;
         public Vector2 Velocity { get; private set; }
         public CatState State { get; set; }
