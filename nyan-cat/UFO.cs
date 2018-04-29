@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
@@ -11,13 +11,16 @@ namespace nyan_cat
     public class UFO : IEnemy
     {
         public Vector2 Velocity { get; }
-        public Point LeftTopCorner { get; }
+        public Point LeftTopCorner { get; private set; }
         public int Height { get; }
         public int Width { get; }
-        public bool IsAlive { get; }
+        public bool IsAlive { get; private set; }
 
         public UFO(Point leftTopCorner)
         {
+            if (leftTopCorner.X < 0 || leftTopCorner.Y < 0
+                || leftTopCorner.X > 1000 || leftTopCorner.Y > 788)
+                throw new ArgumentException();
             Velocity = new Vector2(-1, 0);
             LeftTopCorner = leftTopCorner;
             Height = 50;
@@ -27,7 +30,11 @@ namespace nyan_cat
 
         public void Move()
         {
-            throw new NotImplementedException();
+            var dx = (int)Velocity.X;
+            var dy = (int)Velocity.Y;
+            LeftTopCorner = new Point(LeftTopCorner.X + dx,
+                LeftTopCorner.Y + dy);
+            IsAlive = LeftTopCorner.X > 0;
         }
     }
 }
