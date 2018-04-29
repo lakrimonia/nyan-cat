@@ -4,6 +4,7 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using NUnit.Framework.Interfaces;
 
 namespace nyan_cat
 {
@@ -68,7 +69,7 @@ namespace nyan_cat
                     Score += Food.Points * Combo;
                     break;
                 case Bomb _:
-                    if (NyanCat.CurrentGem.Kind != GemKind.Invulnerable)
+                    if (IsInvulnerable())
                         IsOver = true;
                     break;
                 case PowerUp _:
@@ -79,7 +80,7 @@ namespace nyan_cat
                     NyanCat.CurrentGem = metObject as Gem;
                     break;
                 case IEnemy _:
-                    if (NyanCat.CurrentGem.Kind != GemKind.Invulnerable)
+                    if (IsInvulnerable())
                     {
                         Score -= 100; // TODO: позже придумаю нормальную формулу
                         if (NyanCat.CurrentGem.Kind != GemKind.MilkLongLife)
@@ -108,6 +109,12 @@ namespace nyan_cat
         private bool IsCatOnPlatform()
         {
             throw new NotImplementedException();
+        }
+
+        private bool IsInvulnerable()
+        {
+            return NyanCat.CurrentGem.Kind != GemKind.Invulnerable ||
+                   NyanCat.CurrentPowerUp.Kind != PowerUpKind.BigNyan;
         }
     }
 }

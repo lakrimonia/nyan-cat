@@ -18,9 +18,20 @@ namespace nyan_cat
     public class NyanCat : IGameObject
     {
         public bool IsAlive { get; private set; }
-        public int Height { get; }
-        public int Width { get; }
-        public Point LeftTopCorner { get; private set; }
+
+        public int Height => CurrentPowerUp?.Kind == PowerUpKind.BigNyan
+            ? 80 * 2
+            : 80;
+
+        public int Width => CurrentPowerUp?.Kind == PowerUpKind.BigNyan
+            ? 50 * 2
+            : 50;
+
+        private Point leftTopCorner;
+
+        public Point LeftTopCorner => CurrentPowerUp?.Kind == PowerUpKind.BigNyan
+            ? new Point(leftTopCorner.X, leftTopCorner.Y - 80)
+            : leftTopCorner;
         public Vector2 Velocity { get; private set; }
         public CatState State { get; set; }
         public Gem CurrentGem { get; set; }
@@ -31,9 +42,9 @@ namespace nyan_cat
             if (leftTopCorner.X < 0 || leftTopCorner.Y < 0)
                 throw new ArgumentException();
             IsAlive = true;
-            Height = 80;
-            Width = 50;
-            LeftTopCorner = leftTopCorner;
+            //Height = 80;
+            //Width = 50;
+            this.leftTopCorner = leftTopCorner;
             Velocity = new Vector2(0, 0);
         }
 
@@ -51,11 +62,11 @@ namespace nyan_cat
                 Velocity = new Vector2(0, 0);
             if (LeftTopCorner.Y + (int)Velocity.Y < 0)
             {
-                LeftTopCorner = new Point(LeftTopCorner.X + (int)Velocity.X, 0);
+                leftTopCorner = new Point(LeftTopCorner.X + (int)Velocity.X, 0);
                 State = CatState.Fall;
                 return;
             }
-            LeftTopCorner = new Point(LeftTopCorner.X + (int)Velocity.X,
+            leftTopCorner = new Point(LeftTopCorner.X + (int)Velocity.X,
                 LeftTopCorner.Y + (int)Velocity.Y);
 
             if (LeftTopCorner.Y >= 788)
