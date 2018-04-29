@@ -14,7 +14,6 @@ namespace nyan_cat
         public int Score { get; private set; }
 
         private int combo;
-        //public int Combo => combo;
         public int Combo => NyanCat.CurrentGem?.Kind == GemKind.DoubleCombo
             ? combo * 2 : combo;
 
@@ -97,7 +96,8 @@ namespace nyan_cat
                     metObject.Kill();
                     break;
                 case IEnemy _:
-                    if (IsInvulnerable())
+                    if (IsInvulnerable() || 
+                        NyanCat.CurrentPowerUp?.Kind == PowerUpKind.DoggieNyan)
                     {
                         Score -= 100; // TODO: позже придумаю нормальную формулу
                         if (NyanCat.CurrentGem.Kind != GemKind.MilkLongLife)
@@ -130,8 +130,8 @@ namespace nyan_cat
 
         private bool IsInvulnerable()
         {
-            return NyanCat.CurrentGem.Kind != GemKind.Invulnerable ||
-                   NyanCat.CurrentPowerUp.Kind != PowerUpKind.BigNyan;
+            return NyanCat.CurrentGem?.Kind != GemKind.Invulnerable ||
+                   NyanCat.CurrentPowerUp?.Kind != PowerUpKind.BigNyan;
         }
 
         private IGameObject FindNearestEnemyOrBomb()

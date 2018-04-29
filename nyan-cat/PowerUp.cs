@@ -10,7 +10,8 @@ namespace nyan_cat
 {
     public enum PowerUpKind
     {
-        TurboNyan, MilkGlasses, BigNyan, LoveNyan, FloristNyan
+        TurboNyan, MilkGlasses, BigNyan, LoveNyan, FloristNyan,
+        DoggieNyan
     }
 
     public class PowerUp : IGameObject
