@@ -11,25 +11,6 @@ namespace nyan_cat.Tests
     public class MapCreator_Tests
     {
         [Test]
-        public void DistYBetweenPlatfsGreater50()
-        {
-            var map = MapCreator.CreateRandomMap();
-            for (var x = 0; x < MapCreator.GameWidth; x += 250)
-            {
-                var a = map.GameObjects
-                    .Where(e => e is Platform)
-                    .Where(e => e.LeftTopCorner.X == x)
-                    .Select(e => e.LeftTopCorner.Y)
-                    .OrderBy(e => e);
-                var b = a
-                    .Zip(a.Skip(1), (p1, p2) => Math.Abs(p1 + 26 - p2))
-                    .Where(e => e < 50)
-                    .ToList();
-                Assert.AreEqual(0, b.Count);
-            }
-        }
-
-        [Test]
         public void RareThings()
         {
             for (var i = 0; i < 50; i++)

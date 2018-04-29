@@ -8,21 +8,23 @@ using System.Threading.Tasks;
 
 namespace nyan_cat
 {
-    public enum PowerUpKind
+    public enum GemKind
     {
-
+        DoubleCombo,
+        Invulnerable,
+        MilkLongLife
     }
 
-    public class PowerUp : IGameObject
+    public class Gem : IGameObject
     {
-        public PowerUpKind Kind { get; }
+        public GemKind Kind { get; }
         public Vector2 Velocity { get; }
         public Point LeftTopCorner { get; private set; }
         public int Height { get; }
         public int Width { get; }
         public bool IsAlive { get; private set; }
 
-        public PowerUp(Point leftTopCorner, PowerUpKind kind)
+        public Gem(Point leftTopCorner, GemKind kind)
         {
             if (leftTopCorner.X < 0 || leftTopCorner.Y < 0
                 || leftTopCorner.X > 1000 || leftTopCorner.Y > 788)
