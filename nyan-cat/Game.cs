@@ -27,6 +27,7 @@ namespace nyan_cat
             Field = map.Field;
             GameObjects = map.GameObjects;
             Score = 0;
+            combo = 1;
             IsOver = false;
         }
 
@@ -63,6 +64,14 @@ namespace nyan_cat
                 case Gem _:
                     Score += 10000;
                     NyanCat.CurrentGem = metObject as Gem;
+                    break;
+                case IEnemy _:
+                    if (NyanCat.CurrentGem.Kind != GemKind.Invulnerable)
+                    {
+                        Score -= 100; // TODO: позже придумаю нормальную формулу
+                        if (NyanCat.CurrentGem.Kind != GemKind.MilkLongLife)
+                            combo = 1;
+                    }
                     break;
             }
             Score += 1 * Combo;
