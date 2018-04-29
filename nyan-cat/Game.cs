@@ -105,6 +105,7 @@ namespace nyan_cat
             var endY = NyanCat.LeftTopCorner.Y + NyanCat.Height;
 
             return GameObjects
+                .Where(gObj => !(gObj is Platform))
                 .Where(gObj => gObj.LeftTopCorner.X <= endX
                 && gObj.LeftTopCorner.Y <= endY
                 && gObj.LeftTopCorner.X + gObj.Width >= beginX
@@ -114,7 +115,16 @@ namespace nyan_cat
 
         private bool IsCatOnPlatform()
         {
-            throw new NotImplementedException();
+            var startX = NyanCat.LeftTopCorner.X;
+            var startY = NyanCat.LeftTopCorner.Y;
+            var endX = NyanCat.LeftTopCorner.X + NyanCat.Height;
+            var platformUnderCat = GameObjects
+                .Where(gObj => gObj is Platform)
+                .Where(gObj => gObj.LeftTopCorner.Y == startY &&
+                    gObj.LeftTopCorner.X <= endX &&
+                    gObj.LeftTopCorner.X + gObj.Width >= startX)
+                .FirstOrDefault();
+            return !(platformUnderCat is null);
         }
 
         private void UseMilk(IGameObject metObject)
