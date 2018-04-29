@@ -7,7 +7,9 @@ using System.Threading.Tasks;
 
 namespace nyan_cat
 {
-    public NyanCat NyanCat { get; private set; }
+    public class Game
+    { 
+        public NyanCat NyanCat { get; private set; }
         public int Score { get; private set; }
 
         private int combo;
@@ -84,7 +86,7 @@ namespace nyan_cat
             Score += 1 * Combo;
         }
 
-        private IGameObject FindIntersectedObject()
+        public IGameObject FindIntersectedObject()
         {
               var beginX = NyanCat.LeftTopCorner.X;
             var endX = NyanCat.LeftTopCorner.X + NyanCat.Width;
