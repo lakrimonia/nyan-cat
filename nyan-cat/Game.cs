@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
+using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
 using NUnit.Framework.Interfaces;
@@ -20,6 +21,7 @@ namespace nyan_cat
         public bool IsOver { get; private set; }
         public IGameObject[,] Field { get; }
         public List<IGameObject> GameObjects { get; private set; }
+        private bool wasSpeedUp;
 
         public int MilkGlassesCombo => NyanCat.CurrentPowerUp.Kind == PowerUpKind.MilkGlasses ? 2 : 1;
 
@@ -57,8 +59,20 @@ namespace nyan_cat
                     Score += 1000;
                 }
             }
+            var acceleration = new Vector2(0, 0);
+            if (NyanCat.CurrentPowerUp?.Kind == PowerUpKind.TurboNyan)
+            {
+                wasSpeedUp = true;
+                acceleration = new Vector2(-5, 0);
+            }
+            else if (wasSpeedUp)
+            {
+                acceleration = new Vector2(5, 0);
+                wasSpeedUp = false;
+            }
             foreach (var gameObject in GameObjects)
             {
+                gameObject.Accelerate(acceleration);
                 gameObject.Move();
             }
             NyanCat.Move();
