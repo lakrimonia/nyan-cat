@@ -10,7 +10,6 @@ namespace nyan_cat
 {
     public class Milk : IGameObject
     {
-        public int Combo = 1;
         public Vector2 Velocity { get; private set; }
         public Point LeftTopCorner { get; private set; }
         public int Height { get; }

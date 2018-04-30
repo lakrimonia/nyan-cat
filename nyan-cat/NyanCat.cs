@@ -66,8 +66,8 @@ namespace nyan_cat
                 State = CatState.Fall;
                 return;
             }
-            leftTopCorner = new Point(LeftTopCorner.X + (int)Velocity.X,
-                LeftTopCorner.Y + (int)Velocity.Y);
+            leftTopCorner = new Point(leftTopCorner.X + (int)Velocity.X,
+                leftTopCorner.Y + (int)Velocity.Y);
 
             if (LeftTopCorner.Y >= 788)
                 IsAlive = false;

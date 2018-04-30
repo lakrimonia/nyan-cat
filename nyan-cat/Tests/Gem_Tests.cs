@@ -39,7 +39,7 @@ namespace nyan_cat.Tests
             Assert.AreEqual(false, gem.IsAlive, gem.ToString());
         }
 
-        public Gem CreateDoubleGem(int x , int y)
+        public Gem CreateDoubleGem(int x, int y)
         {
             return new Gem(new Point(x, y), GemKind.DoubleCombo);
         }
@@ -49,5 +49,54 @@ namespace nyan_cat.Tests
             for (var i = 0; i < count; i++)
                 food.Move();
         }
+
+        #region DoubleCombo
+
+        [Test]
+        public void DoubleComboStartComboIsTwo()
+        {
+            var game = new Game(0, 0, MapCreator.CreateMap(100, 100));
+            game.NyanCat.CurrentGem = new Gem(new Point(0, 0), GemKind.DoubleCombo);
+            game.Update();
+            Assert.AreEqual(2, game.Combo);
+        }
+
+        [Test]
+        public void AfterDoubleComboStartComboIsOne()
+        {
+            var game = new Game(0, 0, MapCreator.CreateMap(100, 100));
+            game.NyanCat.CurrentGem = new Gem(new Point(0, 0), GemKind.DoubleCombo);
+            game.Update();
+            Assert.AreEqual(2, game.Combo);
+            game.NyanCat.CurrentGem = null;
+            game.Update();
+            Assert.AreEqual(1, game.Combo);
+        }
+
+        [Test]
+        public void DoubleComboMilkGivesTwo()
+        {
+            var platform = new Platform(new Point(100, 300), 300);
+            var milk = new Milk(new Point(181, 250));
+            var map = MapCreator.CreateMap(500, 500, platform, milk);
+            var game = new Game(100, 250, map);
+            game.NyanCat.CurrentGem = new Gem(new Point(0, 0), GemKind.DoubleCombo);
+            game.Update();
+            Assert.AreEqual(4, game.Combo);
+        }
+
+        [Test]
+        public void DoubleComboCowGivesFifty()
+        {
+            var platform = new Platform(new Point(100, 300), 300);
+            var milk = new Cow(new Point(181, 250));
+            var map = MapCreator.CreateMap(500, 500, platform, milk);
+            var game = new Game(100, 250, map);
+            game.NyanCat.CurrentGem = new Gem(new Point(0, 0), GemKind.DoubleCombo);
+            game.Update();
+            Assert.AreEqual(52, game.Combo);
+        }
+
+        #endregion
     }
 }

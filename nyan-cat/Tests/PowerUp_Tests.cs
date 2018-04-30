@@ -124,5 +124,90 @@ namespace nyan_cat.Tests
         }
 
         #endregion
+
+        #region Piano
+
+        [Test]
+        public void Piano()
+        {
+            var platform = new Platform(new Point(100, 200), 200);
+            var map = MapCreator.CreateMap(400, 400, platform);
+            var game = new Game(100, 140, map);
+            game.NyanCat.CurrentPowerUp = new PowerUp(new Point(0, 0), PowerUpKind.Piano);
+            game.Update();
+            game.Update();
+            Assert.AreEqual(3, game.Combo);
+        }
+
+        #endregion
+
+        #region LoveNyan
+
+        [Test]
+        public void LoveNyan()
+        {
+            var platform = new Platform(new Point(50, 500), 300);
+            var animal = new Animal(platform);
+            var ufo = new UFO(new Point(50, 550));
+            var bomb = new Bomb(new Point(50, 600));
+            var map = MapCreator.CreateMap(700, 700, platform, animal, ufo, bomb);
+            var game = new Game(50, 50, map);
+            game.NyanCat.CurrentPowerUp = new PowerUp(new Point(0, 0), PowerUpKind.LoveNyan);
+            game.Update();
+            game.Update();
+            game.Update();
+            Assert.AreEqual(1, game.GameObjects.Count);
+            Assert.GreaterOrEqual(game.Score, 3000);
+        }
+
+        #endregion
+
+        #region FloristNyan
+
+        [Test]
+        public void FloristNyan()
+        {
+            var platform = new Platform(new Point(100, 300), 300);
+            var map = MapCreator.CreateMap(450, 450, platform);
+            var game = new Game(100, 250, map);
+            game.NyanCat.CurrentPowerUp = new PowerUp(new Point(0, 0), PowerUpKind.FloristNyan);
+            game.Update();
+            game.Update();
+            game.Update();
+            Assert.AreEqual(4, game.Combo);
+        }
+
+        #endregion
+
+        #region DoggieNyan
+
+        [Test]
+        public void DoggieNyanProtectedFromEnemies()
+        {
+            var platform = new Platform(new Point(100, 300), 300);
+            var ufo = new UFO(new Point(181, 250));
+            var milk = new Milk(new Point(170, 250));
+            var map = MapCreator.CreateMap(500, 500, platform, ufo, milk);
+            var game = new Game(100, 250, map);
+            game.NyanCat.CurrentPowerUp = new PowerUp(new Point(0, 0), PowerUpKind.DoggieNyan);
+            game.Update();
+            game.Update();
+            game.Update();
+            Assert.AreEqual(2, game.Combo);
+        }
+
+        [Test]
+        public void DoggieNyanNotProtectedFromBombs()
+        {
+            var platform = new Platform(new Point(100, 300), 300);
+            var bomb = new Bomb(new Point(181, 250));
+            var map = MapCreator.CreateMap(500, 500, platform, bomb);
+            var game = new Game(100, 250, map);
+            game.NyanCat.CurrentPowerUp = new PowerUp(new Point(0, 0), PowerUpKind.DoggieNyan);
+            game.Update();
+            Assert.AreEqual(true, game.IsOver);
+        }
+
+        #endregion
     }
 }

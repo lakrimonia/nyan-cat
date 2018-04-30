@@ -12,6 +12,7 @@ namespace nyan_cat
         public int Height { get; }
         public int Width { get; }
         public bool IsAlive { get; private set; }
+        public bool IsMet { get; set; }
 
         public Animal(Platform platform)
         {

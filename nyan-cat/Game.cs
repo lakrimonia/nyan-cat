@@ -24,12 +24,7 @@ namespace nyan_cat
         private bool wasSpeedUp;
 
         public int MilkGlassesCombo =>
-            NyanCat.CurrentPowerUp.Kind == PowerUpKind.MilkGlasses
-                ? 2
-                : 1;
-
-        public int BigNyanMultiplier =>
-            NyanCat.CurrentPowerUp.Kind == PowerUpKind.BigNyan
+            NyanCat.CurrentPowerUp?.Kind == PowerUpKind.MilkGlasses
                 ? 2
                 : 1;
 
@@ -56,7 +51,8 @@ namespace nyan_cat
 
         public void Update()
         {
-            if (NyanCat.CurrentPowerUp?.Kind == PowerUpKind.FloristNyan && NyanCat.State == CatState.Run)
+            if (NyanCat.CurrentPowerUp?.Kind == PowerUpKind.FloristNyan 
+                && NyanCat.State == CatState.Run)
                 combo += 1;
             if (NyanCat.CurrentPowerUp?.Kind == PowerUpKind.LoveNyan)
             {
@@ -64,7 +60,6 @@ namespace nyan_cat
                 if (enemyOrBomb != null)
                 {
                     enemyOrBomb.Kill();
-                    GameObjects.Remove(enemyOrBomb);
                     Score += 1000;
                 }
             }
@@ -79,7 +74,7 @@ namespace nyan_cat
                 acceleration = new Vector2(5, 0);
                 wasSpeedUp = false;
             }
-            foreach (var gameObject in GameObjects)
+            foreach (var gameObject in GameObjects.Where(e => e.IsAlive))
             {
                 gameObject.Accelerate(acceleration);
                 gameObject.Move();
@@ -93,10 +88,56 @@ namespace nyan_cat
 
             if (IsCatOnPlatform())
             {
-                if (NyanCat.State != CatState.Run)
+                if (NyanCat.CurrentPowerUp?.Kind == PowerUpKind.Piano
+                    && NyanCat.State != CatState.Run)
                     combo += 2;
                 NyanCat.State = CatState.Run;
             }
+            else
+                NyanCat.State = CatState.Fall;
+            HandleIntersection();
+            Score += 1 * Combo;
+            GameObjects = GameObjects.Where(gameObj => gameObj.IsAlive).ToList();
+        }
+
+        public IGameObject FindIntersectedObject()
+        {
+            var beginX = NyanCat.LeftTopCorner.X;
+            var endX = NyanCat.LeftTopCorner.X + NyanCat.Width;
+            var beginY = NyanCat.LeftTopCorner.Y;
+            var endY = NyanCat.LeftTopCorner.Y + NyanCat.Height;
+
+            return GameObjects
+                .Where(gObj => !(gObj is Platform))
+                .Where(gObj => !(gObj is IEnemy) || !((IEnemy)gObj).IsMet)
+                .FirstOrDefault(gObj => gObj.LeftTopCorner.X <= endX
+                && gObj.LeftTopCorner.Y <= endY
+                && gObj.LeftTopCorner.X + gObj.Width >= beginX
+                && gObj.LeftTopCorner.Y + gObj.Height >= beginY);
+        }
+
+        private bool IsCatOnPlatform()
+        {
+            //var startX = NyanCat.LeftTopCorner.X;
+            //var startY = NyanCat.LeftTopCorner.Y;
+            //var endX = NyanCat.LeftTopCorner.X + NyanCat.Height;
+            //var platformUnderCat = GameObjects
+            //    .Where(gObj => gObj is Platform)
+            //    .FirstOrDefault(gObj => gObj.LeftTopCorner.Y == startY &&
+            //        gObj.LeftTopCorner.X <= endX &&
+            //        gObj.LeftTopCorner.X + gObj.Width >= startX);
+            //return !(platformUnderCat is null);
+
+            return GameObjects
+                .Where(e => e is Platform)
+                .Where(p => NyanCat.LeftTopCorner.Y + NyanCat.Height >= p.LeftTopCorner.Y)
+                .Where(p => NyanCat.LeftTopCorner.Y + NyanCat.Height < p.LeftTopCorner.Y + p.Height)
+                .Where(p => NyanCat.LeftTopCorner.X >= p.LeftTopCorner.X)
+                .Any(p => NyanCat.LeftTopCorner.X <= p.LeftTopCorner.X + p.Width);
+        }
+
+        private void HandleIntersection()
+        {
             var metObject = FindIntersectedObject();
             switch (metObject)
             {
@@ -116,45 +157,15 @@ namespace nyan_cat
                     UseGem(metObject);
                     break;
                 case IEnemy _:
-                    UseEnemy();
+                    UseEnemy(metObject);
                     break;
             }
-            Score += 1 * Combo;
-        }
-
-        public IGameObject FindIntersectedObject()
-        {
-            var beginX = NyanCat.LeftTopCorner.X;
-            var endX = NyanCat.LeftTopCorner.X + NyanCat.Width * BigNyanMultiplier;
-            var beginY = NyanCat.LeftTopCorner.Y;
-            var endY = NyanCat.LeftTopCorner.Y + NyanCat.Height * BigNyanMultiplier;
-
-            return GameObjects
-                .Where(gObj => !(gObj is Platform))
-                .FirstOrDefault(gObj => gObj.LeftTopCorner.X <= endX
-                && gObj.LeftTopCorner.Y <= endY
-                && gObj.LeftTopCorner.X + gObj.Width >= beginX
-                && gObj.LeftTopCorner.Y + gObj.Height >= beginY);
-        }
-
-        private bool IsCatOnPlatform()
-        {
-            var startX = NyanCat.LeftTopCorner.X;
-            var startY = NyanCat.LeftTopCorner.Y;
-            var endX = NyanCat.LeftTopCorner.X + NyanCat.Height;
-            var platformUnderCat = GameObjects
-                .Where(gObj => gObj is Platform)
-                .FirstOrDefault(gObj => gObj.LeftTopCorner.Y == startY &&
-                    gObj.LeftTopCorner.X <= endX &&
-                    gObj.LeftTopCorner.X + gObj.Width >= startX);
-            return !(platformUnderCat is null);
         }
 
         private void UseMilk(IGameObject metObject)
         {
             combo += metObject is Cow ? 25 * MilkGlassesCombo : 1 * MilkGlassesCombo;
             metObject.Kill();
-            GameObjects.Remove(metObject);
         }
 
         private void UseFood(IGameObject metObject)
@@ -164,7 +175,6 @@ namespace nyan_cat
             else
                 Score += Food.Points * Combo;
             metObject.Kill();
-            GameObjects.Remove(metObject);
         }
 
         private void UseBomb()
@@ -178,7 +188,6 @@ namespace nyan_cat
             var powerUp = metObject as PowerUp;
             NyanCat.CurrentPowerUp = new PowerUp(powerUp.LeftTopCorner, powerUp.Kind);
             metObject.Kill();
-            GameObjects.Remove(metObject);
         }
 
         private void UseGem(IGameObject metObject)
@@ -187,15 +196,15 @@ namespace nyan_cat
             var gem = metObject as Gem;
             NyanCat.CurrentGem = new Gem(gem.LeftTopCorner, gem.Kind);
             metObject.Kill();
-            GameObjects.Remove(metObject);
         }
 
-        private void UseEnemy()
+        private void UseEnemy(IGameObject metObject)
         {
+            ((IEnemy)metObject).IsMet = true;
             if (!IsInvulnerable() &&
                 NyanCat.CurrentPowerUp?.Kind != PowerUpKind.DoggieNyan)
             {
-                Score -= 100; // TODO: позже придумаю нормальную формулу
+                Score -= 100;
                 if (NyanCat.CurrentGem.Kind != GemKind.MilkLongLife)
                     combo = 1;
             }
