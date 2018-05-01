@@ -27,7 +27,7 @@ namespace nyan_cat
         {
             var graphics = e.Graphics;
             //graphics.DrawImage(Image.FromFile("nyan-cat.png"), new Point(0, 0));
-            var map = NewMapCreator.CreateRandomMap();
+            var map = NewMapCreator.CreateRandomMap(false ,true);
             foreach (var gameObject in map)
             {
                 var rect = new Rectangle(gameObject.LeftTopCorner.X,
@@ -35,6 +35,12 @@ namespace nyan_cat
                     gameObject.Height);
                 switch (gameObject)
                 {
+                    case Animal _:
+                        graphics.DrawImage(Image.FromFile("tac-nyan.png"), rect);
+                        break;
+                    case UFO _:
+                        graphics.DrawImage(Image.FromFile("ufo.png"), rect);
+                        break;
                     case Food _:
                         graphics.DrawImage(Image.FromFile("cake.png"), rect);
                         break;

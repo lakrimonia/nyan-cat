@@ -23,7 +23,7 @@ namespace nyan_cat
             BeginEnd = Tuple.Create(x1, x2);
             Velocity = new Vector2(-1, 0);
             Height = 50;
-            Width = 50;
+            Width = 80;
             LeftTopCorner = GetLeftTopCorner(platform);
             IsAlive = true;
         }

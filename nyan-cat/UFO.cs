@@ -25,7 +25,7 @@ namespace nyan_cat
             Velocity = new Vector2(-1, 0);
             LeftTopCorner = leftTopCorner;
             Height = 50;
-            Width = 50;
+            Width = 80;
             IsAlive = true;
         }
 
