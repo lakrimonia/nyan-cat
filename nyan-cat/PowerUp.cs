@@ -25,9 +25,9 @@ namespace nyan_cat
 
         public PowerUp(Point leftTopCorner, PowerUpKind kind)
         {
-            if (leftTopCorner.X < 0 || leftTopCorner.Y < 0
-                || leftTopCorner.X > 1000 || leftTopCorner.Y > 788)
-                throw new ArgumentException();
+            //if (leftTopCorner.X < 0 || leftTopCorner.Y < 0
+            //    || leftTopCorner.X > 1000 || leftTopCorner.Y > 788)
+            //    throw new ArgumentException();
             Kind = kind;
             Velocity = new Vector2(-1, 0);
             LeftTopCorner = leftTopCorner;
@@ -51,6 +51,12 @@ namespace nyan_cat
         {
             Velocity = new Vector2(Velocity.X + acceleration.X,
                 Velocity.Y + acceleration.Y);
+        }
+
+        public void Use(Game game)
+        {
+            game.NyanCat.CurrentPowerUp = new PowerUp(LeftTopCorner, Kind);
+            Kill();
         }
 
         public override string ToString()

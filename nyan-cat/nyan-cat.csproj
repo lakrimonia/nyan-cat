@@ -57,7 +57,6 @@
     <Compile Include="Gem.cs" />
     <Compile Include="IEnemy.cs" />
     <Compile Include="IGameObject.cs" />
-    <Compile Include="Map.cs" />
     <Compile Include="MapCreator.cs" />
     <Compile Include="Milk.cs" />
     <Compile Include="MyForm.cs">
@@ -66,6 +65,7 @@
     <Compile Include="MyForm.Designer.cs">
       <DependentUpon>MyForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="NewMapCreator.cs" />
     <Compile Include="NyanCat.cs" />
     <Compile Include="Platform.cs" />
     <Compile Include="PowerUp.cs" />

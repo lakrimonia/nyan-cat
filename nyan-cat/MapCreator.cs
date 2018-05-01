@@ -8,6 +8,18 @@ using System.Threading.Tasks;
 
 namespace nyan_cat
 {
+    public class Map
+    {
+        public IGameObject[,] Field { get; }
+        public List<IGameObject> GameObjects { get; }
+
+        public Map(int width, int height)
+        {
+            Field = new IGameObject[width, height];
+            GameObjects = new List<IGameObject>();
+        }
+    }
+
     public static class MapCreator
     {
         public const int GameWidth = 1000;
@@ -123,9 +135,11 @@ namespace nyan_cat
             var AnimalOrUFO = rnd.Next(0, 1 + 1);
             IEnemy item;
             if (AnimalOrUFO == 0)
-                item = new UFO(
-                    new Point(platform.LeftTopCorner.X - platform.Width + OtherObjectSize,
-                        platform.LeftTopCorner.Y - OtherObjectSize));
+            {
+                var x = rnd.Next(platform.LeftTopCorner.X,
+                    platform.LeftTopCorner.X + platform.Width - OtherObjectSize + 1);
+                item = new UFO(new Point(x, platform.LeftTopCorner.Y - OtherObjectSize));
+            }
             else
                 item = new Animal(platform);
             return item;

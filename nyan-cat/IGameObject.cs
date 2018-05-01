@@ -17,6 +17,7 @@ namespace nyan_cat
         bool IsAlive { get; }
 
         void Move();
+        void Use(Game game);
         void Kill();
         void Accelerate(Vector2 acceleration);
     }

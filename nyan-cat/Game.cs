@@ -12,15 +12,16 @@ namespace nyan_cat
     public class Game
     {
         public NyanCat NyanCat { get; private set; }
-        public int Score { get; private set; }
+        public int Score { get; internal set; }
 
-        private int combo;
+        internal int combo;
         public int Combo => NyanCat.CurrentGem?.Kind == GemKind.DoubleCombo
             ? combo * 2 : combo;
 
-        public bool IsOver { get; private set; }
+        public bool IsOver { get; internal set; }
         public IGameObject[,] Field { get; }
         public List<IGameObject> GameObjects { get; private set; }
+        private List<IGameObject> futureGameObjects;
         private bool wasSpeedUp;
 
         public int MilkGlassesCombo =>
@@ -31,9 +32,11 @@ namespace nyan_cat
         public Game(int catLeftTopCornerX, int catLeftTopCornerY)
         {
             NyanCat = new NyanCat(new Point(catLeftTopCornerX, catLeftTopCornerY));
-            var map = MapCreator.CreateRandomMap();
-            Field = map.Field;
-            GameObjects = map.GameObjects;
+            //var map = MapCreator.CreateRandomMap();
+            //Field = map.Field;
+            //GameObjects = map.GameObjects;
+            GameObjects = NewMapCreator.CreateRandomMap();
+            futureGameObjects = NewMapCreator.CreateRandomMap(true);
             Score = 0;
             combo = 1;
             IsOver = false;
@@ -44,6 +47,7 @@ namespace nyan_cat
             NyanCat = new NyanCat(new Point(catLeftTopCornerX, catLeftTopCornerY));
             Field = map.Field;
             GameObjects = map.GameObjects;
+            futureGameObjects = new List<IGameObject>();
             Score = 0;
             combo = 1;
             IsOver = false;
@@ -51,7 +55,7 @@ namespace nyan_cat
 
         public void Update()
         {
-            if (NyanCat.CurrentPowerUp?.Kind == PowerUpKind.FloristNyan 
+            if (NyanCat.CurrentPowerUp?.Kind == PowerUpKind.FloristNyan
                 && NyanCat.State == CatState.Run)
                 combo += 1;
             if (NyanCat.CurrentPowerUp?.Kind == PowerUpKind.LoveNyan)
@@ -74,11 +78,8 @@ namespace nyan_cat
                 acceleration = new Vector2(5, 0);
                 wasSpeedUp = false;
             }
-            foreach (var gameObject in GameObjects.Where(e => e.IsAlive))
-            {
-                gameObject.Accelerate(acceleration);
-                gameObject.Move();
-            }
+            MoveAllObjects(GameObjects, acceleration);
+            MoveAllObjects(futureGameObjects, acceleration);
             NyanCat.Move();
             if (NyanCat.LeftTopCorner.Y <= 0)
             {
@@ -118,16 +119,6 @@ namespace nyan_cat
 
         private bool IsCatOnPlatform()
         {
-            //var startX = NyanCat.LeftTopCorner.X;
-            //var startY = NyanCat.LeftTopCorner.Y;
-            //var endX = NyanCat.LeftTopCorner.X + NyanCat.Height;
-            //var platformUnderCat = GameObjects
-            //    .Where(gObj => gObj is Platform)
-            //    .FirstOrDefault(gObj => gObj.LeftTopCorner.Y == startY &&
-            //        gObj.LeftTopCorner.X <= endX &&
-            //        gObj.LeftTopCorner.X + gObj.Width >= startX);
-            //return !(platformUnderCat is null);
-
             return GameObjects
                 .Where(e => e is Platform)
                 .Where(p => NyanCat.LeftTopCorner.Y + NyanCat.Height >= p.LeftTopCorner.Y)
@@ -136,81 +127,18 @@ namespace nyan_cat
                 .Any(p => NyanCat.LeftTopCorner.X <= p.LeftTopCorner.X + p.Width);
         }
 
-        private void HandleIntersection()
+        private void HandleIntersection() => FindIntersectedObject()?.Use(this);
+
+        private void MoveAllObjects(List<IGameObject> gameObjects, Vector2 acceleration)
         {
-            var metObject = FindIntersectedObject();
-            switch (metObject)
+            foreach (var gameObject in gameObjects)
             {
-                case Milk _:
-                    UseMilk(metObject);
-                    break;
-                case Food _:
-                    UseFood(metObject);
-                    break;
-                case Bomb _:
-                    UseBomb();
-                    break;
-                case PowerUp _:
-                    UsePowerUp(metObject);
-                    break;
-                case Gem _:
-                    UseGem(metObject);
-                    break;
-                case IEnemy _:
-                    UseEnemy(metObject);
-                    break;
+                gameObject.Accelerate(acceleration);
+                gameObject.Move();
             }
         }
 
-        private void UseMilk(IGameObject metObject)
-        {
-            combo += metObject is Cow ? 25 * MilkGlassesCombo : 1 * MilkGlassesCombo;
-            metObject.Kill();
-        }
-
-        private void UseFood(IGameObject metObject)
-        {
-            if (NyanCat.CurrentPowerUp.Kind == PowerUpKind.MilkGlasses)
-                combo += MilkGlassesCombo;
-            else
-                Score += Food.Points * Combo;
-            metObject.Kill();
-        }
-
-        private void UseBomb()
-        {
-            if (!IsInvulnerable())
-                IsOver = true;
-        }
-
-        private void UsePowerUp(IGameObject metObject)
-        {
-            var powerUp = metObject as PowerUp;
-            NyanCat.CurrentPowerUp = new PowerUp(powerUp.LeftTopCorner, powerUp.Kind);
-            metObject.Kill();
-        }
-
-        private void UseGem(IGameObject metObject)
-        {
-            Score += 10000;
-            var gem = metObject as Gem;
-            NyanCat.CurrentGem = new Gem(gem.LeftTopCorner, gem.Kind);
-            metObject.Kill();
-        }
-
-        private void UseEnemy(IGameObject metObject)
-        {
-            ((IEnemy)metObject).IsMet = true;
-            if (!IsInvulnerable() &&
-                NyanCat.CurrentPowerUp?.Kind != PowerUpKind.DoggieNyan)
-            {
-                Score -= 100;
-                if (NyanCat.CurrentGem.Kind != GemKind.MilkLongLife)
-                    combo = 1;
-            }
-        }
-
-        private bool IsInvulnerable()
+        internal bool IsInvulnerable()
         {
             return NyanCat.CurrentGem?.Kind == GemKind.Invulnerable ||
                    NyanCat.CurrentPowerUp?.Kind == PowerUpKind.BigNyan;

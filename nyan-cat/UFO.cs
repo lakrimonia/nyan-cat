@@ -19,9 +19,9 @@ namespace nyan_cat
 
         public UFO(Point leftTopCorner)
         {
-            if (leftTopCorner.X < 0 || leftTopCorner.Y < 0
-                || leftTopCorner.X > 1000 || leftTopCorner.Y > 788)
-                throw new ArgumentException();
+            //if (leftTopCorner.X < 0 || leftTopCorner.Y < 0
+            //    || leftTopCorner.X > 1000 || leftTopCorner.Y > 788)
+            //    throw new ArgumentException();
             Velocity = new Vector2(-1, 0);
             LeftTopCorner = leftTopCorner;
             Height = 50;
@@ -44,6 +44,18 @@ namespace nyan_cat
         {
             Velocity = new Vector2(Velocity.X + acceleration.X,
                 Velocity.Y + acceleration.Y);
+        }
+
+        public void Use(Game game)
+        {
+            IsMet = true;
+            if (!game.IsInvulnerable() &&
+                game.NyanCat.CurrentPowerUp?.Kind != PowerUpKind.DoggieNyan)
+            {
+                game.Score -= 100;
+                if (game.NyanCat.CurrentGem.Kind != GemKind.MilkLongLife)
+                    game.combo = 1;
+            }
         }
     }
 }

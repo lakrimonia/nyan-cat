@@ -19,9 +19,9 @@ namespace nyan_cat
 
         public Food(Point leftTopCorner)
         {
-            if (leftTopCorner.X < 0 || leftTopCorner.Y < 0
-                || leftTopCorner.X > 1000 || leftTopCorner.Y > 788)
-                throw new ArgumentException();
+            //if (leftTopCorner.X < 0 || leftTopCorner.Y < 0
+            //    || leftTopCorner.X > 1000 || leftTopCorner.Y > 788)
+            //    throw new ArgumentException();
             IsAlive = true;
             LeftTopCorner = leftTopCorner;
             Height = 50;
@@ -44,6 +44,15 @@ namespace nyan_cat
         {
             Velocity = new Vector2(Velocity.X + acceleration.X,
                 Velocity.Y + acceleration.Y);
+        }
+
+        public void Use(Game game)
+        {
+            if (game.NyanCat.CurrentPowerUp.Kind == PowerUpKind.MilkGlasses)
+                game.combo += game.MilkGlassesCombo;
+            else
+                game.Score += Points * game.Combo;
+            Kill();
         }
 
         public override string ToString()

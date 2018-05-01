@@ -63,6 +63,18 @@ namespace nyan_cat
                 Velocity.Y + acceleration.Y);
         }
 
+        public void Use(Game game)
+        {
+            IsMet = true;
+            if (!game.IsInvulnerable() &&
+                game.NyanCat.CurrentPowerUp?.Kind != PowerUpKind.DoggieNyan)
+            {
+                game.Score -= 100;
+                if (game.NyanCat.CurrentGem.Kind != GemKind.MilkLongLife)
+                    game.combo = 1;
+            }
+        }
+
         public override string ToString()
         {
             return $"Animal ({LeftTopCorner.X}, {LeftTopCorner.Y})";

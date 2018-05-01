@@ -27,36 +27,31 @@ namespace nyan_cat
         {
             var graphics = e.Graphics;
             //graphics.DrawImage(Image.FromFile("nyan-cat.png"), new Point(0, 0));
-            foreach (var obj in game.GameObjects)
+            var map = NewMapCreator.CreateRandomMap();
+            foreach (var gameObject in map)
             {
-                if (obj is Platform)
+                var rect = new Rectangle(gameObject.LeftTopCorner.X,
+                    gameObject.LeftTopCorner.Y, gameObject.Width,
+                    gameObject.Height);
+                switch (gameObject)
                 {
-                    var platform = obj as Platform;
-                    var left = platform.LeftTopCorner;
-                    for (var i = left.X; i < left.X + platform.Width + 1; i++)
-                        graphics.DrawImage(Image.FromFile("platform.png"), new Point(i, left.Y));
+                    case Food _:
+                        graphics.DrawImage(Image.FromFile("cake.png"), rect);
+                        break;
+                    case Cow _:
+                        graphics.DrawImage(Image.FromFile("cow.png"), rect);
+                        break;
+                    case Milk _:
+                        graphics.DrawImage(Image.FromFile("milk.png"), rect);
+                        break;
+                    case Bomb _:
+                        graphics.FillRectangle(Brushes.DarkRed, rect);
+                        break;
+                    case Platform _:
+                        var file = $"p{gameObject.Width}.png";
+                        graphics.DrawImage(Image.FromFile(file), rect);
+                        break;
                 }
-                var leftCorner = obj.LeftTopCorner;
-                if (obj is Cow)
-                    graphics.DrawImage(Image.FromFile("cow.png"), leftCorner);
-                else if (obj is Milk)
-                {
-                    graphics.DrawImage(Image.FromFile("milk.png"), leftCorner);
-                }
-                else if (obj is Gem)
-                {
-                    var gem = obj as Gem;
-                    string file = null;
-                    if (gem.Kind == GemKind.DoubleCombo)
-                        file = "red-gem.png";
-                    if (gem.Kind == GemKind.Invulnerable)
-                        file = "green-gem.png";
-                    if (gem.Kind == GemKind.MilkLongLife)
-                        file = "grey-gem.png";
-                    graphics.DrawImage(Image.FromFile(file), leftCorner);
-                }
-                else if (obj is Food)
-                    graphics.DrawImage(Image.FromFile("cake.png"), leftCorner);
             }
         }
     }

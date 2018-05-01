@@ -14,9 +14,9 @@ namespace nyan_cat
 
         public Platform(Point leftTopCorner, int width)
         {
-            if (width <= 0 || width >= 1000 ||
-                leftTopCorner.X < 0 || leftTopCorner.Y < 0)
-                throw new ArgumentException();
+            //if (width <= 0 || width >= 1000 ||
+            //    leftTopCorner.X < 0 || leftTopCorner.Y < 0)
+            //    throw new ArgumentException();
             IsAlive = true;
             Height = 26;
             Width = width;
@@ -45,6 +45,8 @@ namespace nyan_cat
             Velocity = new Vector2(Velocity.X + acceleration.X,
                 Velocity.Y + acceleration.Y);
         }
+
+        public void Use(Game game) { }
 
         public override string ToString()
         {

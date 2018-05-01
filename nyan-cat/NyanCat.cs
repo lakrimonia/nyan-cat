@@ -39,8 +39,8 @@ namespace nyan_cat
 
         public NyanCat(Point leftTopCorner)
         {
-            if (leftTopCorner.X < 0 || leftTopCorner.Y < 0)
-                throw new ArgumentException();
+            //if (leftTopCorner.X < 0 || leftTopCorner.Y < 0)
+            //    throw new ArgumentException();
             IsAlive = true;
             //Height = 80;
             //Width = 50;
@@ -80,6 +80,8 @@ namespace nyan_cat
             Velocity = new Vector2(Velocity.X + acceleration.X,
                 Velocity.Y + acceleration.Y);
         }
+
+        public void Use(Game game) { }
 
         public override string ToString()
         {
