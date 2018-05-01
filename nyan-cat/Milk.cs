@@ -47,9 +47,9 @@ namespace nyan_cat
 
         public void Use(Game game)
         {
-            game.combo += this is Cow 
-                ? 25 * game.MilkGlassesCombo 
-                : 1 * game.MilkGlassesCombo;
+            game.Combo += this is Cow
+                ? 25 * game.MilkGlassesCombo * game.AddCombo
+                : 1 * game.MilkGlassesCombo * game.AddCombo;
             Kill();
         }
 

@@ -18,9 +18,6 @@ namespace nyan_cat
 
         public Bomb(Point leftTopCorner)
         {
-            //if (leftTopCorner.X < 0 || leftTopCorner.Y < 0
-            //    || leftTopCorner.X > 1000 || leftTopCorner.Y > 788)
-            //    throw new ArgumentException();
             IsAlive = true;
             Width = 50;
             Height = 25;
@@ -47,7 +44,7 @@ namespace nyan_cat
 
         public void Use(Game game)
         {
-            if (!game.IsInvulnerable())
+            if (!game.NyanCat.ProtectedFromBombs)
                 game.IsOver = true;
         }
 

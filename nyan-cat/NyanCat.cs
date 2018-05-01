@@ -36,11 +36,11 @@ namespace nyan_cat
         public CatState State { get; set; }
         public Gem CurrentGem { get; set; }
         public PowerUp CurrentPowerUp { get; set; }
+        public bool ProtectedFromBombs { get; internal set; }
+        public bool ProtectedFromEnemies { get; internal set; }
 
         public NyanCat(Point leftTopCorner)
         {
-            //if (leftTopCorner.X < 0 || leftTopCorner.Y < 0)
-            //    throw new ArgumentException();
             IsAlive = true;
             //Height = 80;
             //Width = 50;

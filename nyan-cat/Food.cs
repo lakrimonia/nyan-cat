@@ -49,7 +49,7 @@ namespace nyan_cat
         public void Use(Game game)
         {
             if (game.NyanCat.CurrentPowerUp.Kind == PowerUpKind.MilkGlasses)
-                game.combo += game.MilkGlassesCombo;
+                game.Combo += game.MilkGlassesCombo * game.AddCombo;
             else
                 game.Score += Points * game.Combo;
             Kill();

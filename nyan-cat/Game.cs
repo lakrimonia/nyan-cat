@@ -14,9 +14,8 @@ namespace nyan_cat
         public NyanCat NyanCat { get; private set; }
         public int Score { get; internal set; }
 
-        internal int combo;
-        public int Combo => NyanCat.CurrentGem?.Kind == GemKind.DoubleCombo
-            ? combo * 2 : combo;
+        internal int AddCombo = 1;
+        public int Combo { get; internal set; }
 
         public bool IsOver { get; internal set; }
         public IGameObject[,] Field { get; }
@@ -31,34 +30,31 @@ namespace nyan_cat
             NyanCat.CurrentPowerUp?.Kind == PowerUpKind.MilkGlasses
                 ? 2
                 : 1;
+       internal bool ComboProtectedFromEnemies { get; set; }
 
         public Game(int catLeftTopCornerX, int catLeftTopCornerY)
         {
             NyanCat = new NyanCat(new Point(catLeftTopCornerX, catLeftTopCornerY));
-            //var map = MapCreator.CreateRandomMap();
-            //Field = map.Field;
-            //GameObjects = map.GameObjects;
-            fieldWidth = NewMapCreator.GameWidth;
-            fieldHeight = NewMapCreator.GameHeight;
-            GameObjects = NewMapCreator.CreateRandomMap();
-            futureGameObjects = NewMapCreator.CreateRandomMap(true);
+            fieldWidth = MapCreator.GameWidth;
+            fieldHeight = MapCreator.GameHeight;
+            GameObjects = MapCreator.CreateRandomMap();
+            futureGameObjects = MapCreator.CreateRandomMap(true);
             Score = 0;
-            combo = 1;
+            Combo = 1;
             IsOver = false;
         }
 
-        public Game(int catLeftTopCornerX, int catLeftTopCornerY, Map map)
+        public Game(int catLeftTopCornerX, int catLeftTopCornerY, List<IGameObject> map)
         {
             // TODO: fix it
-            fieldWidth = NewMapCreator.GameWidth;
-            fieldHeight = NewMapCreator.GameHeight;
+            fieldWidth = MapCreator.GameWidth;
+            fieldHeight = MapCreator.GameHeight;
 
             NyanCat = new NyanCat(new Point(catLeftTopCornerX, catLeftTopCornerY));
-            Field = map.Field;
-            GameObjects = map.GameObjects;
+            GameObjects = map;
             futureGameObjects = new List<IGameObject>();
             Score = 0;
-            combo = 1;
+            Combo = 1;
             IsOver = false;
         }
 
@@ -66,7 +62,7 @@ namespace nyan_cat
         {
             if (NyanCat.CurrentPowerUp?.Kind == PowerUpKind.FloristNyan
                 && NyanCat.State == CatState.Run)
-                combo += 1;
+                Combo += AddCombo;
             if (NyanCat.CurrentPowerUp?.Kind == PowerUpKind.LoveNyan)
             {
                 var enemyOrBomb = FindNearestEnemyOrBomb();
@@ -88,7 +84,7 @@ namespace nyan_cat
             {
                 if (NyanCat.CurrentPowerUp?.Kind == PowerUpKind.Piano
                     && NyanCat.State != CatState.Run)
-                    combo += 2;
+                    Combo += 2 * AddCombo;
                 NyanCat.State = CatState.Run;
             }
             else
@@ -108,7 +104,7 @@ namespace nyan_cat
                 futureGameObjects.Remove(newObject);
             }
             if (futureGameObjects.Count == 0)
-                futureGameObjects = NewMapCreator.CreateRandomMap(true, true);
+                futureGameObjects = MapCreator.CreateRandomMap(true, true);
         }
 
         public IGameObject FindIntersectedObject()

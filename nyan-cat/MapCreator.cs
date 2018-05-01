@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Configuration;
 using System.Drawing;
 using System.Linq;
 using System.Text;
@@ -8,93 +7,185 @@ using System.Threading.Tasks;
 
 namespace nyan_cat
 {
-    public class Map
-    {
-        public IGameObject[,] Field { get; }
-        public List<IGameObject> GameObjects { get; }
-
-        public Map(int width, int height)
-        {
-            Field = new IGameObject[width, height];
-            GameObjects = new List<IGameObject>();
-        }
-    }
-
     public static class MapCreator
     {
         public const int GameWidth = 1000;
-        public const int GameHeight = 788;
-        private const int PlatformHeight = 26;
+        public const int GameHeight = 700;
+        private const int EnemyWidth = 80;
+        private const int ObjUsualSize = 50;
         private const int BombHeight = 25;
-        private const int OtherObjectSize = 50;
 
-        public static Map CreateRandomMap()
+        private static int addX;
+        private static bool withoutEnemiesAndBombs;
+
+        private static int maxCowCount;
+        private static int maxBombCount;
+        private static int maxGemCount;
+        private static int maxEnemyCount;
+        private static int maxPowerUpCount;
+
+        private static Random random = new Random();
+
+        public static List<IGameObject> CreateRandomMap(bool isFuture = false, bool enemiesAndBombs = false)
         {
-            var map = new Map(GameWidth, GameHeight);
-            for (var x = 0; x <= GameWidth - 200; x += 250)
+            withoutEnemiesAndBombs = !enemiesAndBombs;
+            maxBombCount = enemiesAndBombs && IsThereChance(20) ? random.Next(1, 3 + 1) : 0;
+            maxEnemyCount = enemiesAndBombs && IsThereChance(20) ? random.Next(1, 2 + 1) : 0;
+            maxCowCount = IsThereChance(15) ? 1 : 0;
+            maxGemCount = IsThereChance(12) ? 1 : 0;
+            maxPowerUpCount = IsThereChance(40) ? random.Next(1, 3 + 1) : 0;
+            addX = isFuture ? GameWidth : 0;
+            var map = new List<IGameObject>();
+            for (var x = 0 + addX; x < GameWidth - 100 + addX; x += 250)
             {
                 PlacePlatformsBombsAndEnemies(map, x);
                 PlaceFoodAndMilk(map, x);
-                PlacePowerUpOrGem(map, x);
+                if ((maxPowerUpCount != 0 || maxGemCount != 0) && IsThereChance(75))
+                    PlacePowerUpOrGem(map, x);
             }
             return map;
         }
 
-        private static void PlacePlatformsBombsAndEnemies(Map map, int x)
+        private static void PlacePowerUpOrGem(List<IGameObject> map, int x)
         {
-            foreach (var p in GeneratePlatforms(map, x))
+            var ys = new List<int>();
+            for (var i = 50; i < GameHeight - ObjUsualSize; i += 125)
+                ys.Add(i);
+            var y = ys.OrderBy(e => random.Next(ys.Count)).FirstOrDefault();
+            var leftTopCorner = new Point(x + 200, y);
+            var gemKind = GetRandomEnumValue<GemKind>();
+            var powerUpKind = GetRandomEnumValue<PowerUpKind>();
+            var powerUpOrGem = random.Next(0, 1 + 1);
+            if (powerUpOrGem == 0 || maxGemCount == 0)
             {
-                var leftTopCorner = new Point(x, p.Key);
-                var platform = new Platform(leftTopCorner, p.Value);
-                var bomb = GenerateBomb(platform);
-                var enemy = GenerateEnemy(platform);
-                PlaceGameObject(map, platform);
-                if (bomb != null)
-                    PlaceGameObject(map, bomb);
-                if (enemy != null)
-                    PlaceGameObject(map, enemy);
+                PlaceGameObject(map, new PowerUp(leftTopCorner, powerUpKind));
+                maxPowerUpCount--;
             }
+            else
+            {
+                PlaceGameObject(map, new Gem(leftTopCorner, gemKind));
+                maxGemCount--;
+            }
+
         }
 
-        private static void PlaceFoodAndMilk(Map map, int x)
+        private static void PlaceFoodAndMilk(List<IGameObject> map, int x)
         {
-            for (var y = 0; y < GameHeight - 100; y += 50 + PlatformHeight)
+            for (var y = 50; y < GameHeight - 125; y += 125)
             {
-                var rnd = new Random();
-                var foodCount = rnd.Next(0, 4 + 1);
-                for (var i = 0; i < foodCount; i++)
+                if (!IsThereChance(50))
+                    continue;
+                var count = random.Next(1, 4 + 1);
+                for (var i = 0; i < count; i++)
                 {
-                    var choice = rnd.Next(0, 1 + 1);
+                    var foodOrMilk = random.Next(0, 1 + 1);
                     IGameObject item;
-                    var leftTopCorner = new Point(x + 50 * i + 3, y);
-                    if (choice == 1)
+                    var leftTopCorner = new Point(x + 50 * i, y);
+                    if (foodOrMilk == 0)
+                    {
                         item = new Food(leftTopCorner);
+                    }
                     else
                     {
-                        var isGenerateCow = IsCreate(15);
-                        item = isGenerateCow ? new Cow(leftTopCorner) : new Milk(leftTopCorner);
+                        var isCow = maxCowCount > 0 && IsThereChance(10);
+                        item = isCow
+                            ? new Cow(leftTopCorner)
+                            : new Milk(leftTopCorner);
+                        maxCowCount -= isCow ? 1 : 0;
                     }
                     PlaceGameObject(map, item);
                 }
             }
         }
 
-        private static void PlacePowerUpOrGem(Map map, int x)
+        private static void PlacePlatformsBombsAndEnemies(List<IGameObject> map, int x)
         {
-            for (var y = 0; y < GameHeight - 100; y += 50 + PlatformHeight)
+            foreach (var p in GeneratePlatforms(map, x))
             {
-                if (!IsCreate(10))
+                var platform = new Platform(new Point(x, p.Item1), p.Item2);
+                PlaceGameObject(map, platform);
+                if (withoutEnemiesAndBombs)
                     continue;
-                var itemCenter = new Point(x + OtherObjectSize / 2,
-                    y + OtherObjectSize / 2);
-                var isGem = IsCreate(30);
-                IGameObject item;
-                if (isGem)
-                    item = new Gem(itemCenter, GetRandomEnumValue<GemKind>());
-                else
-                    item = new PowerUp(itemCenter, GetRandomEnumValue<PowerUpKind>());
-                PlaceGameObject(map, item);
+                if (maxBombCount > 0)
+                {
+                    var bomb = GenerateBomb(platform);
+                    if (bomb != null)
+                    {
+                        PlaceGameObject(map, bomb);
+                        maxBombCount--;
+                    }
+                }
+                if(maxEnemyCount>0)
+                {
+                    var enemy = GenerateEnemy(platform);
+                    if (enemy != null)
+                    {
+                        PlaceGameObject(map, enemy);
+                        maxEnemyCount--;
+                    }
+                }
             }
+        }
+
+        private static IEnemy GenerateEnemy(Platform platform)
+        {
+            if (!IsThereChance(10))
+                return null;
+            if (random.Next(0, 1 + 1) == 0)
+                return new UFO(new Point(random.Next(
+                        platform.LeftTopCorner.X,
+                        platform.LeftTopCorner.X + platform.Width - EnemyWidth),
+                    platform.LeftTopCorner.Y - ObjUsualSize));
+            return new Animal(platform);
+        }
+
+        private static IEnumerable<Tuple<int, int>> GeneratePlatforms(List<IGameObject> map, int x)
+        {
+            var count = random.Next(3, 6 + 1);
+            var ys = new List<int>();
+            for (var i = 125; i < GameHeight; i += 125)
+                ys.Add(i);
+            ys = ys.OrderBy(e => random.Next(ys.Count)).ToList();
+            foreach (var y in ys)
+            {
+                if (map.Any(p => p.LeftTopCorner.Y == y
+                                 && p.LeftTopCorner.X + p.Width >= x))
+                    continue;
+                var width = random.Next(1, 4 + 1) * 100;
+                while (x + width >= GameWidth + addX)
+                    width -= 100;
+                yield return Tuple.Create(y, width);
+                count--;
+                if (count == 0)
+                    yield break;
+            }
+        }
+
+        private static Bomb GenerateBomb(Platform platform)
+        {
+            if (!IsThereChance(20))
+                return null;
+            var x = random.Next(platform.LeftTopCorner.X,
+                platform.LeftTopCorner.X + platform.Width - ObjUsualSize);
+            var y = platform.LeftTopCorner.Y - BombHeight;
+            var bomb = new Bomb(new Point(x, y));
+            return bomb;
+        }
+
+        private static bool IsThereChance(int percents)
+        {
+            var answer = new List<bool>();
+            for (var i = 0; i < percents; i++)
+                answer.Add(true);
+            for (var i = 0; i < 100 - percents; i++)
+                answer.Add(false);
+            var a = answer.OrderBy(e => random.Next(100));
+            return a.FirstOrDefault();
+        }
+
+        private static void PlaceGameObject(List<IGameObject> map, IGameObject gameObject)
+        {
+            map.Add(gameObject);
         }
 
         private static T GetRandomEnumValue<T>()
@@ -104,96 +195,7 @@ namespace nyan_cat
             return (T)values.GetValue(rnd.Next(values.Length));
         }
 
-        private static bool IsCreate(int chance)
-        {
-            var chances = new List<bool>();
-            for (var i = 0; i < chance; i++)
-                chances.Add(true);
-            for (var i = 0; i < 100 - chance; i++)
-                chances.Add(false);
-            var rnd = new Random();
-            return chances.OrderBy(e => rnd.Next(100)).First();
-        }
-
-        private static Bomb GenerateBomb(Platform platform)
-        {
-            var isGenerateBomb = IsCreate(20);
-            if (!isGenerateBomb)
-                return null;
-            var rnd = new Random();
-            var x = rnd.Next(platform.LeftTopCorner.X,
-                platform.LeftTopCorner.X + platform.Width - OtherObjectSize);
-            var y = platform.LeftTopCorner.Y - BombHeight;
-            return new Bomb(new Point(x, y));
-        }
-
-        private static IEnemy GenerateEnemy(Platform platform)
-        {
-            if (!IsCreate(15))
-                return null;
-            var rnd = new Random();
-            var AnimalOrUFO = rnd.Next(0, 1 + 1);
-            IEnemy item;
-            if (AnimalOrUFO == 0)
-            {
-                var x = rnd.Next(platform.LeftTopCorner.X,
-                    platform.LeftTopCorner.X + platform.Width - OtherObjectSize + 1);
-                item = new UFO(new Point(x, platform.LeftTopCorner.Y - OtherObjectSize));
-            }
-            else
-                item = new Animal(platform);
-            return item;
-        }
-
-        private static Dictionary<int, int> GeneratePlatforms(Map map, int x)
-        {
-            var result = new Dictionary<int, int>(); // <y, width>
-            var ys = GetYs(50, GameHeight - 100, 50);
-            var rnd = new Random();
-            var platformsCount = rnd.Next(3, 5 + 1);
-            ys = ys.OrderBy(item => rnd.Next(650 / 50));
-            foreach (var y in ys)
-            {
-                if (map.Field[x, y] == null)
-                {
-                    var width = Math.Min(rnd.Next(100, 400 + 1), GameWidth - x - 1);
-                    result[y] = width;
-                }
-                if (result.Count == platformsCount)
-                    break;
-            }
-            return result;
-        }
-
-        private static IEnumerable<int> GetYs(int begin, int end, int step)
-        {
-            for (var i = 0; i < end / step; i++)
-            {
-                var y = begin + i * (step + PlatformHeight);
-                if (y > end)
-                    yield break;
-                yield return y;
-            }
-        }
-
-        public static Map CreateMap(int width, int height, params IGameObject[] gameObjects)
-        {
-            var map = new Map(width, height);
-            foreach (var gameObject in gameObjects)
-                PlaceGameObject(map, gameObject);
-            return map;
-        }
-
-        private static void PlaceGameObject(Map map, IGameObject gameObject)
-        {
-            map.GameObjects.Add(gameObject);
-            var beginX = gameObject.LeftTopCorner.X;
-            var endX = gameObject.LeftTopCorner.X + gameObject.Width;
-            var beginY = gameObject.LeftTopCorner.Y;
-            var endY = gameObject.LeftTopCorner.Y + gameObject.Height;
-            for (var y = beginY; y < endY + 1; y++)
-                for (var x = beginX; x < endX + 1; x++)
-                    map.Field[x, y] = gameObject;
-        }
+        public static List<IGameObject> CreateMap(int width, int height, params IGameObject[] gameObjects)
+            => gameObjects.ToList();
     }
 }

@@ -27,7 +27,7 @@ namespace nyan_cat
         {
             var graphics = e.Graphics;
             //graphics.DrawImage(Image.FromFile("nyan-cat.png"), new Point(0, 0));
-            var map = NewMapCreator.CreateRandomMap(false ,true);
+            var map = MapCreator.CreateRandomMap(false ,true);
             foreach (var gameObject in map)
             {
                 var rect = new Rectangle(gameObject.LeftTopCorner.X,

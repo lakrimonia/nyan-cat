@@ -66,12 +66,11 @@ namespace nyan_cat
         public void Use(Game game)
         {
             IsMet = true;
-            if (!game.IsInvulnerable() &&
-                game.NyanCat.CurrentPowerUp?.Kind != PowerUpKind.DoggieNyan)
+            if (!game.NyanCat.ProtectedFromEnemies)
             {
                 game.Score -= 100;
                 if (game.NyanCat.CurrentGem.Kind != GemKind.MilkLongLife)
-                    game.combo = 1;
+                    game.Combo = 1 * game.AddCombo;
             }
         }
 
