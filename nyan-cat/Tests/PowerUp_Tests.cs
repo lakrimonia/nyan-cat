@@ -11,11 +11,11 @@ namespace nyan_cat.Tests
     [TestFixture]
     public class PowerUp_Tests
     {
-        [Test]
-        public void IncorrectCreation()
-        {
-            Assert.Throws<ArgumentException>(() => { CreatePowerUp(-1, 0); });
-        }
+        //[Test]
+        //public void IncorrectCreation()
+        //{
+        //    Assert.Throws<ArgumentException>(() => { CreatePowerUp(-1, 0); });
+        //}
 
         [Test]
         public void CorrectCreation()

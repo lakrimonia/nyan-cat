@@ -9,8 +9,8 @@ namespace nyan_cat
 {
     public static class NewMapCreator
     {
-        private const int GameWidth = 1000;
-        private const int GameHeight = 700;
+        public const int GameWidth = 1000;
+        public const int GameHeight = 700;
         private const int PlatformHeight = 26;
         private const int ObjUsualSize = 50;
         private const int BombHeight = 25;

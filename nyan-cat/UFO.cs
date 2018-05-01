@@ -35,7 +35,7 @@ namespace nyan_cat
             var dy = (int)Velocity.Y;
             LeftTopCorner = new Point(LeftTopCorner.X + dx,
                 LeftTopCorner.Y + dy);
-            IsAlive = LeftTopCorner.X > 0;
+            IsAlive = IsAlive && LeftTopCorner.X > 0;
         }
 
         public void Kill() => IsAlive = false;

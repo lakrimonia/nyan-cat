@@ -24,6 +24,9 @@ namespace nyan_cat
         private List<IGameObject> futureGameObjects;
         private bool wasSpeedUp;
 
+        private int fieldWidth;
+        private int fieldHeight;
+
         public int MilkGlassesCombo =>
             NyanCat.CurrentPowerUp?.Kind == PowerUpKind.MilkGlasses
                 ? 2
@@ -35,6 +38,8 @@ namespace nyan_cat
             //var map = MapCreator.CreateRandomMap();
             //Field = map.Field;
             //GameObjects = map.GameObjects;
+            fieldWidth = NewMapCreator.GameWidth;
+            fieldHeight = NewMapCreator.GameHeight;
             GameObjects = NewMapCreator.CreateRandomMap();
             futureGameObjects = NewMapCreator.CreateRandomMap(true);
             Score = 0;
@@ -44,6 +49,10 @@ namespace nyan_cat
 
         public Game(int catLeftTopCornerX, int catLeftTopCornerY, Map map)
         {
+            // TODO: fix it
+            fieldWidth = NewMapCreator.GameWidth;
+            fieldHeight = NewMapCreator.GameHeight;
+
             NyanCat = new NyanCat(new Point(catLeftTopCornerX, catLeftTopCornerY));
             Field = map.Field;
             GameObjects = map.GameObjects;
@@ -67,19 +76,7 @@ namespace nyan_cat
                     Score += 1000;
                 }
             }
-            var acceleration = new Vector2(0, 0);
-            if (NyanCat.CurrentPowerUp?.Kind == PowerUpKind.TurboNyan)
-            {
-                wasSpeedUp = true;
-                acceleration = new Vector2(-5, 0);
-            }
-            else if (wasSpeedUp)
-            {
-                acceleration = new Vector2(5, 0);
-                wasSpeedUp = false;
-            }
-            MoveAllObjects(GameObjects, acceleration);
-            MoveAllObjects(futureGameObjects, acceleration);
+            MoveAllObjects();
             NyanCat.Move();
             if (NyanCat.LeftTopCorner.Y <= 0)
             {
@@ -98,7 +95,20 @@ namespace nyan_cat
                 NyanCat.State = CatState.Fall;
             HandleIntersection();
             Score += 1 * Combo;
+            UpdateListOfObjects();
+        }
+
+        private void UpdateListOfObjects()
+        {
             GameObjects = GameObjects.Where(gameObj => gameObj.IsAlive).ToList();
+            var newObjects = futureGameObjects.Where(e => e.LeftTopCorner.X < fieldWidth);
+            foreach (var newObject in newObjects)
+            {
+                GameObjects.Add(newObject);
+                futureGameObjects.Remove(newObject);
+            }
+            if (futureGameObjects.Count == 0)
+                futureGameObjects = NewMapCreator.CreateRandomMap(true, true);
         }
 
         public IGameObject FindIntersectedObject()
@@ -128,6 +138,23 @@ namespace nyan_cat
         }
 
         private void HandleIntersection() => FindIntersectedObject()?.Use(this);
+
+        private void MoveAllObjects()
+        {
+            var acceleration = new Vector2(0, 0);
+            if (NyanCat.CurrentPowerUp?.Kind == PowerUpKind.TurboNyan)
+            {
+                wasSpeedUp = true;
+                acceleration = new Vector2(-5, 0);
+            }
+            else if (wasSpeedUp)
+            {
+                acceleration = new Vector2(5, 0);
+                wasSpeedUp = false;
+            }
+            MoveAllObjects(GameObjects, acceleration);
+            MoveAllObjects(futureGameObjects, acceleration);
+        }
 
         private void MoveAllObjects(List<IGameObject> gameObjects, Vector2 acceleration)
         {
