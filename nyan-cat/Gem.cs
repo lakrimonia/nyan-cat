@@ -23,7 +23,6 @@ namespace nyan_cat
         public int Height { get; }
         public int Width { get; }
         public bool IsAlive { get; private set; }
-        private Dictionary<GemKind, Action<Game>> actions;
 
         public Gem(Point leftTopCorner, GemKind kind)
         {

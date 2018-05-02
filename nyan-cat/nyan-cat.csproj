@@ -54,6 +54,7 @@
     <Compile Include="Cow.cs" />
     <Compile Include="Food.cs" />
     <Compile Include="Game.cs" />
+    <Compile Include="GameObjectExtensions.cs" />
     <Compile Include="Gem.cs" />
     <Compile Include="IEnemy.cs" />
     <Compile Include="IGameObject.cs" />
