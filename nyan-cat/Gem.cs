@@ -90,13 +90,13 @@ namespace nyan_cat
         private static void DoubleComboActivate(Game game)
         {
             game.Combo *= 2;
-            game.AddCombo = 2;
+            game.AddCombo *= 2;
         }
 
         private static void DoubleComboDeactivate(Game game)
         {
             game.Combo /= 2;
-            game.AddCombo = 1;
+            game.AddCombo /= 2;
         }
 
         private static void InvulnerableActivate(Game game)
@@ -107,8 +107,12 @@ namespace nyan_cat
 
         private static void InvulnerableDeactivate(Game game)
         {
-            game.NyanCat.ProtectedFromBombs = false;
-            game.NyanCat.ProtectedFromEnemies = false;
+            if (game.NyanCat.CurrentPowerUp?.Kind != PowerUpKind.BigNyan)
+            {
+                game.NyanCat.ProtectedFromBombs = false;
+                if (game.NyanCat.CurrentPowerUp?.Kind != PowerUpKind.DoggieNyan)
+                    game.NyanCat.ProtectedFromEnemies = false;
+            }
         }
 
         private static void MilkLongLifeActivate(Game game)

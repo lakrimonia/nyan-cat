@@ -190,9 +190,8 @@ namespace nyan_cat
 
         private static T GetRandomEnumValue<T>()
         {
-            var rnd = new Random();
             var values = Enum.GetValues(typeof(T));
-            return (T)values.GetValue(rnd.Next(values.Length));
+            return (T)values.GetValue(random.Next(values.Length));
         }
 
         public static List<IGameObject> CreateMap(int width, int height, params IGameObject[] gameObjects)
