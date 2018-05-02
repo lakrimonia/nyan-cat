@@ -25,9 +25,6 @@ namespace nyan_cat
 
         public PowerUp(Point leftTopCorner, PowerUpKind kind)
         {
-            //if (leftTopCorner.X < 0 || leftTopCorner.Y < 0
-            //    || leftTopCorner.X > 1000 || leftTopCorner.Y > 788)
-            //    throw new ArgumentException();
             Kind = kind;
             Velocity = new Vector2(-1, 0);
             LeftTopCorner = leftTopCorner;

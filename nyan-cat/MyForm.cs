@@ -15,17 +15,28 @@ namespace nyan_cat
         {
             this.game = game;
 
+            DoubleBuffered = true;
+            var time = 0;
+            var timer = new Timer();
+            timer.Interval = 1;
+            timer.Tick += (sender, args) =>
+            {
+                time++;
+                Invalidate();
+            };
+            timer.Start();
+
+            Paint += (sender, args) =>
+            {
+                game.NyanCat.Draw(args.Graphics);
+                foreach (var gameObject in game.GameObjects)
+                    gameObject.Draw(args.Graphics);
+                game.Update();
+            };
+
             MaximizeBox = false;
             FormBorderStyle = FormBorderStyle.FixedDialog;
             InitializeComponent();
-        }
-
-        protected override void OnPaint(PaintEventArgs e)
-        {
-            var graphics = e.Graphics;
-            var map = MapCreator.CreateRandomMap(false, true);
-            foreach (var gameObject in map)
-                gameObject.Draw(graphics);
         }
     }
 }

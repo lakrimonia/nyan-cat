@@ -19,9 +19,6 @@ namespace nyan_cat
 
         public Food(Point leftTopCorner)
         {
-            //if (leftTopCorner.X < 0 || leftTopCorner.Y < 0
-            //    || leftTopCorner.X > 1000 || leftTopCorner.Y > 788)
-            //    throw new ArgumentException();
             IsAlive = true;
             LeftTopCorner = leftTopCorner;
             Height = 50;
@@ -48,7 +45,7 @@ namespace nyan_cat
 
         public void Use(Game game)
         {
-            if (game.NyanCat.CurrentPowerUp.Kind == PowerUpKind.MilkGlasses)
+            if (game.NyanCat.CurrentPowerUp?.Kind == PowerUpKind.MilkGlasses)
                 game.Combo += game.MilkGlassesCombo * game.AddCombo;
             else
                 game.Score += Points * game.Combo;

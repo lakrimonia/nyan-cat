@@ -6,6 +6,8 @@ namespace nyan_cat
 {
     public static class GameObjectExtensions
     {
+        private static readonly Dictionary<IGameObject, string> images
+            = new Dictionary<IGameObject, string>();
         private static readonly Dictionary<PowerUpKind, string> powerUpImages
             = new Dictionary<PowerUpKind, string>
             {
@@ -47,23 +49,32 @@ namespace nyan_cat
                 gameObject.LeftTopCorner.Y, gameObject.Width,
                 gameObject.Height);
             string image;
-            switch (gameObject)
+            if (images.ContainsKey(gameObject))
+                image = images[gameObject];
+            else
             {
-                case Platform _:
-                    image = $"p{gameObject.Width}.png";
-                    break;
-                case Food _:
-                    image = foodImages[rnd.Next(foodImages.Count)];
-                    break;
-                case Gem _:
-                    image = gemImages[((Gem)gameObject).Kind];
-                    break;
-                case PowerUp _:
-                    image = powerUpImages[((PowerUp) gameObject).Kind];
-                    break;
-                default:
-                    image = otherImages[gameObject.GetType()];
-                    break;
+                switch (gameObject)
+                {
+                    case NyanCat _:
+                        image = "nyan-cat.png";
+                        break;
+                    case Platform _:
+                        image = $"p{gameObject.Width}.png";
+                        break;
+                    case Food _:
+                        image = foodImages[rnd.Next(foodImages.Count)];
+                        break;
+                    case Gem _:
+                        image = gemImages[((Gem) gameObject).Kind];
+                        break;
+                    case PowerUp _:
+                        image = powerUpImages[((PowerUp) gameObject).Kind];
+                        break;
+                    default:
+                        image = otherImages[gameObject.GetType()];
+                        break;
+                }
+                images[gameObject] = image;
             }
             e.DrawImage(Image.FromFile(image), rect);
         }

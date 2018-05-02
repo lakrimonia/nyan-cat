@@ -97,7 +97,7 @@ namespace nyan_cat
         private void UpdateListOfObjects()
         {
             GameObjects = GameObjects.Where(gameObj => gameObj.IsAlive).ToList();
-            var newObjects = futureGameObjects.Where(e => e.LeftTopCorner.X < fieldWidth);
+            var newObjects = futureGameObjects.Where(e => e.LeftTopCorner.X < fieldWidth).ToList();
             foreach (var newObject in newObjects)
             {
                 GameObjects.Add(newObject);

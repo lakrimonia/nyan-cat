@@ -18,9 +18,6 @@ namespace nyan_cat
 
         public Milk(Point leftTopCorner)
         {
-            //if (leftTopCorner.X < 0 || leftTopCorner.Y < 0
-            //    || leftTopCorner.X > 1000 || leftTopCorner.Y > 788)
-            //    throw new ArgumentException();
             Velocity = new Vector2(-1, 0);
             LeftTopCorner = leftTopCorner;
             Height = 50;

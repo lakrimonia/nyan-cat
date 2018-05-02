@@ -14,9 +14,6 @@ namespace nyan_cat
 
         public Platform(Point leftTopCorner, int width)
         {
-            //if (width <= 0 || width >= 1000 ||
-            //    leftTopCorner.X < 0 || leftTopCorner.Y < 0)
-            //    throw new ArgumentException();
             IsAlive = true;
             Height = 26;
             Width = width;
@@ -29,11 +26,6 @@ namespace nyan_cat
             var dx = (int)Velocity.X;
             var dy = (int)Velocity.Y;
             IsAlive = LeftTopCorner.X + Width > Math.Abs(dx);
-            if (LeftTopCorner.X + dx < 0)
-            {
-                Width += dx;
-                dx = 0;
-            }
             LeftTopCorner = new Point(LeftTopCorner.X + dx,
                 LeftTopCorner.Y + dy);
         }
