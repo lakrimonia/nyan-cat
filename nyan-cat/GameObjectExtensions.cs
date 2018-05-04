@@ -35,7 +35,7 @@ namespace nyan_cat
         private static readonly Dictionary<Type, string> otherImages
             = new Dictionary<Type, string>
             {
-                [typeof(Animal)] = "tac-nyan.png",
+                [typeof(TacNyan)] = "tac-nyan.png",
                 [typeof(UFO)] = "ufo.png",
                 [typeof(Cow)] = "cow.png",
                 [typeof(Milk)] = "milk.png",

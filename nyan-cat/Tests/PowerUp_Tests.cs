@@ -147,7 +147,7 @@ namespace nyan_cat.Tests
         public void LoveNyan()
         {
             var platform = new Platform(new Point(50, 500), 300);
-            var animal = new Animal(platform);
+            var animal = new TacNyan(platform);
             var ufo = new UFO(new Point(50, 550));
             var bomb = new Bomb(new Point(50, 600));
             var map = MapCreator.CreateMap(700, 700, platform, animal, ufo, bomb);

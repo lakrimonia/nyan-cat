@@ -136,7 +136,7 @@ namespace nyan_cat
                         platform.LeftTopCorner.X,
                         platform.LeftTopCorner.X + platform.Width - EnemyWidth),
                     platform.LeftTopCorner.Y - ObjUsualSize));
-            return new Animal(platform);
+            return new TacNyan(platform);
         }
 
         private static IEnumerable<Tuple<int, int>> GeneratePlatforms(List<IGameObject> map, int x)

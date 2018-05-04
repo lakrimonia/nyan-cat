@@ -4,7 +4,7 @@ using System.Numerics;
 
 namespace nyan_cat
 {
-    public class Animal : IEnemy
+    public class TacNyan : IEnemy
     {
         public Tuple<int, int> BeginEnd { get; private set; }
         public Vector2 Velocity { get; private set; }
@@ -14,7 +14,7 @@ namespace nyan_cat
         public bool IsAlive { get; private set; }
         public bool IsMet { get; set; }
 
-        public Animal(Platform platform)
+        public TacNyan(Platform platform)
         {
             if (platform.Width <= 50 || platform.LeftTopCorner.Y < 50)
                 throw new ArgumentException();

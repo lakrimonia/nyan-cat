@@ -49,9 +49,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Animal.cs" />
+    <Compile Include="TacNyan.cs" />
     <Compile Include="Bomb.cs" />
     <Compile Include="Cow.cs" />
+    <Compile Include="Dog.cs" />
     <Compile Include="Food.cs" />
     <Compile Include="Game.cs" />
     <Compile Include="GameObjectExtensions.cs" />

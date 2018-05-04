@@ -15,28 +15,28 @@ namespace nyan_cat.Tests
         public void IncorrectCreation1()
         {
             var platform = CreatePlatform(100, 100, 1);
-            Assert.Throws<ArgumentException>(() => { new Animal(platform); });
+            Assert.Throws<ArgumentException>(() => { new TacNyan(platform); });
         }
 
         [Test]
         public void IncorrectCreation2()
         {
             var platform = CreatePlatform(10, 10, 60);
-            Assert.Throws<ArgumentException>(() => { new Animal(platform); });
+            Assert.Throws<ArgumentException>(() => { new TacNyan(platform); });
         }
 
         [Test]
         public void CorrectCreation()
         {
             var platform = CreatePlatform(100, 100, 60);
-            var animal = new Animal(platform);
+            var animal = new TacNyan(platform);
         }
 
         [Test]
         public void LeftTopCorner()
         {
             var platform = CreatePlatform(100, 100, 60);
-            var animal = new Animal(platform);
+            var animal = new TacNyan(platform);
             Assert.AreEqual(new Point(100, 50),
                 animal.LeftTopCorner, animal.ToString());
         }
@@ -45,7 +45,7 @@ namespace nyan_cat.Tests
         public void MoveIfOnTheLeftEdge()
         {
             var platform = CreatePlatform(100, 100, 52);
-            var animal = new Animal(platform);
+            var animal = new TacNyan(platform);
             var result = animal.LeftTopCorner;
             animal.Move();
             Assert.AreEqual(result, animal.LeftTopCorner);
@@ -55,7 +55,7 @@ namespace nyan_cat.Tests
         public void MoveIfOnTheRightEdge()
         {
             var platform = CreatePlatform(100, 100, 52);
-            var animal = new Animal(platform);
+            var animal = new TacNyan(platform);
             var result = animal.LeftTopCorner.X - 2;
             Move(animal, platform, 3);
             Assert.AreEqual(result, animal.LeftTopCorner.X);
@@ -65,7 +65,7 @@ namespace nyan_cat.Tests
         public void OverEdge()
         {
             var platform = CreatePlatform(0, 100, 52);
-            var animal = new Animal(platform);
+            var animal = new TacNyan(platform);
             var result = animal.LeftTopCorner.X - 2;
             Move(animal, platform, 3);
             Assert.AreEqual(false, animal.IsAlive);
