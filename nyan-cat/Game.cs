@@ -79,13 +79,14 @@ namespace nyan_cat
                 IsOver = true;
                 return;
             }
-
-            if (IsCatOnPlatform())
+            Platform platformUnderCat;
+            if (TryGetPlarformUnderCat(out platformUnderCat)
+                && NyanCat.State != CatState.Jump)
             {
                 if (NyanCat.CurrentPowerUp?.Kind == PowerUpKind.Piano
                     && NyanCat.State != CatState.Run)
                     Combo += 2 * AddCombo;
-                NyanCat.State = CatState.Run;
+                NyanCat.LandOnPlatform(platformUnderCat);
             }
             else if (NyanCat.State != CatState.Jump)
                 NyanCat.State = CatState.Fall;
@@ -123,14 +124,25 @@ namespace nyan_cat
                 && gObj.LeftTopCorner.Y + gObj.Height >= beginY);
         }
 
-        private bool IsCatOnPlatform()
+        private bool TryGetPlarformUnderCat(out Platform platform)
         {
-            return GameObjects
+            var beginX = NyanCat.LeftTopCorner.X;
+            var endX = NyanCat.LeftTopCorner.X + NyanCat.Width;
+            var beginY = NyanCat.LeftTopCorner.Y;
+            var endY = NyanCat.LeftTopCorner.Y + NyanCat.Height;
+
+            platform = GameObjects
                 .Where(e => e is Platform)
-                .Where(p => NyanCat.LeftTopCorner.Y + NyanCat.Height >= p.LeftTopCorner.Y)
-                .Where(p => NyanCat.LeftTopCorner.Y + NyanCat.Height < p.LeftTopCorner.Y + p.Height)
-                .Where(p => NyanCat.LeftTopCorner.X >= p.LeftTopCorner.X)
-                .Any(p => NyanCat.LeftTopCorner.X <= p.LeftTopCorner.X + p.Width);
+                .Select(e => (Platform)e)
+                .Where(p => endY >= p.LeftTopCorner.Y)
+                .Where(p => endY < p.LeftTopCorner.Y + p.Height)
+                .Where(p => (beginX >= p.LeftTopCorner.X
+                && beginX <= p.LeftTopCorner.X + p.Width) ||
+                (endX >= p.LeftTopCorner.X
+                && endX <= p.LeftTopCorner.X + p.Width))
+                .FirstOrDefault();
+            return !(platform is null);
+            
         }
 
         private void HandleIntersection() => FindIntersectedObject()?.Use(this);

@@ -56,6 +56,13 @@ namespace nyan_cat
             State = CatState.Jump;
         }
 
+        public void LandOnPlatform(Platform platform)
+        {
+            State = CatState.Run;
+            leftTopCorner = new Point(LeftTopCorner.X,
+                platform.LeftTopCorner.Y - Height);
+        }
+
         public void Move()
         {
             if (State == CatState.Jump && JumpTime > 15)
