@@ -87,7 +87,7 @@ namespace nyan_cat
                     Combo += 2 * AddCombo;
                 NyanCat.State = CatState.Run;
             }
-            else
+            else if (NyanCat.State != CatState.Jump)
                 NyanCat.State = CatState.Fall;
             HandleIntersection();
             Score += 1 * Combo;

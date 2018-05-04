@@ -14,11 +14,12 @@ namespace nyan_cat
         public MyForm(Game game)
         {
             this.game = game;
-
             DoubleBuffered = true;
             var time = 0;
-            var timer = new Timer();
-            timer.Interval = 1;
+            var timer = new Timer
+            {
+                Interval = 1
+            };
             timer.Tick += (sender, args) =>
             {
                 time++;
@@ -33,6 +34,12 @@ namespace nyan_cat
                     gameObject.Draw(args.Graphics);
                 game.Update();
             };
+
+            KeyDown += (sender, ev) =>
+            {
+                game.NyanCat.Jump();
+            };
+
 
             MaximizeBox = false;
             FormBorderStyle = FormBorderStyle.FixedDialog;
