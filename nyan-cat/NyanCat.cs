@@ -18,6 +18,7 @@ namespace nyan_cat
     public class NyanCat : IGameObject
     {
         public bool IsAlive { get; private set; }
+        public int JumpTime { get; private set; }
 
         public int Height => CurrentPowerUp?.Kind == PowerUpKind.BigNyan
             ? 50 * 2
@@ -50,12 +51,17 @@ namespace nyan_cat
 
         public void Jump()
         {
+            JumpTime = 0;
             Velocity = new Vector2(0, -10);
             State = CatState.Jump;
         }
 
         public void Move()
         {
+            if (State == CatState.Jump && JumpTime > 15)
+                State = CatState.Fall;
+            else
+                JumpTime += 1;
             if (State == CatState.Fall)
                 Velocity = new Vector2(0, 10);
             if (State == CatState.Run)
