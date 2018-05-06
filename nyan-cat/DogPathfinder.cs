@@ -57,8 +57,11 @@ namespace nyan_cat
                 var nextNode = point;
                 if (!track.ContainsKey(nextNode) || track[nextNode].Price > currentPrice)
                 {
-                    track[nextNode] = new DijkstraData { Previous = toOpen,
-                        Price = currentPrice };
+                    track[nextNode] = new DijkstraData
+                    {
+                        Previous = toOpen,
+                        Price = currentPrice
+                    };
                 }
             }
         }
