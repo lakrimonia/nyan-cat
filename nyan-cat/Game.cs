@@ -168,6 +168,11 @@ namespace nyan_cat
         {
             foreach (var gameObject in gameObjects)
             {
+                if (gameObject is Dog dog)
+                {
+                    dog.Move(this);
+                    continue;
+                }
                 gameObject.Accelerate(acceleration);
                 gameObject.Move();
             }
