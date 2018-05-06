@@ -1,5 +1,3 @@
-using System;
-using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Numerics;
@@ -52,8 +50,22 @@ namespace nyan_cat
 
         public void Use(Game game)
         {
+            game.NyanCat.CurrentPowerUp?.Deactivate(game);
             game.NyanCat.CurrentPowerUp = new PowerUp(LeftTopCorner, Kind);
+            game.NyanCat.CurrentPowerUp.Activate(game);
             Kill();
+        }
+
+        public void Activate(Game game)
+        {
+            if (PowerUpActions.Activate.ContainsKey(Kind))
+                PowerUpActions.Activate[Kind](game);
+        }
+
+        public void Deactivate(Game game)
+        {
+            if (PowerUpActions.Deactivate.ContainsKey(Kind))
+                PowerUpActions.Deactivate[Kind](game);
         }
 
         public override string ToString()

@@ -49,7 +49,7 @@ namespace nyan_cat
             if (!game.NyanCat.ProtectedFromEnemies)
             {
                 game.Score -= 100;
-                if (game.NyanCat.CurrentGem.Kind != GemKind.MilkLongLife)
+                if (game.NyanCat.CurrentGem?.Kind != GemKind.MilkLongLife)
                     game.Combo = 1 * game.AddCombo;
             }
         }

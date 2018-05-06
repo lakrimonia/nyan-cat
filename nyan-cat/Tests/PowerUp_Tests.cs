@@ -90,6 +90,7 @@ namespace nyan_cat.Tests
             var map = MapCreator.CreateMap(500, 500, cow, enemy, platform);
             var game = new Game(219, 250, map);
             game.NyanCat.CurrentPowerUp = new PowerUp(new Point(0, 0), PowerUpKind.BigNyan);
+            game.NyanCat.CurrentPowerUp.Activate(game);
             game.Update();
             var score = game.Score;
             var combo = game.Combo;
@@ -97,12 +98,13 @@ namespace nyan_cat.Tests
             Assert.GreaterOrEqual(game.Combo, combo);
             Assert.GreaterOrEqual(game.Score, score);
         }
-
+        
         public void BigNyanProtectedFromBombs(Platform platform, Bomb bomb)
         {
             var map = MapCreator.CreateMap(500, 500, bomb, platform);
             var game = new Game(219, 250, map);
             game.NyanCat.CurrentPowerUp = new PowerUp(new Point(0, 0), PowerUpKind.BigNyan);
+            game.NyanCat.CurrentPowerUp.Activate(game);
             game.Update();
             Assert.AreEqual(false, game.IsOver);
         }
@@ -117,6 +119,7 @@ namespace nyan_cat.Tests
             var map = MapCreator.CreateMap(500, 500, milk, cow, food, platform);
             var game = new Game(100, 250, map);
             game.NyanCat.CurrentPowerUp = new PowerUp(new Point(0, 0), PowerUpKind.BigNyan);
+            game.NyanCat.CurrentPowerUp.Activate(game);
             game.Update();
             game.Update();
             game.Update();

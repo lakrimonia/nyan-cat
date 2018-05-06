@@ -36,26 +36,30 @@ namespace nyan_cat
         {
             game.NyanCat.ProtectedFromBombs = true;
             game.NyanCat.ProtectedFromEnemies = true;
+            game.ProtectingFromBombsGem = true;
+            game.ProtectingFromEnemiesGem = true;
+            game.ProtectingComboGem = true;
         }
 
         private static void InvulnerableDeactivate(Game game)
         {
-            if (game.NyanCat.CurrentPowerUp?.Kind != PowerUpKind.BigNyan)
-            {
-                game.NyanCat.ProtectedFromBombs = false;
-                if (game.NyanCat.CurrentPowerUp?.Kind != PowerUpKind.DoggieNyan)
-                    game.NyanCat.ProtectedFromEnemies = false;
-            }
+            game.NyanCat.ProtectedFromBombs = game.ProtectingFromBombsPowerUp;
+            game.NyanCat.ProtectedFromEnemies = game.ProtectingFromEnemiesPowerUp;
+            game.ProtectingFromBombsGem = false;
+            game.ProtectingFromEnemiesGem = false;
+            game.ProtectingComboGem = false;
         }
 
         private static void MilkLongLifeActivate(Game game)
         {
             game.ComboProtectedFromEnemies = true;
+            game.ProtectingComboGem = true;
         }
 
         private static void MilkLongLifeDeactivate(Game game)
         {
-            game.ComboProtectedFromEnemies = false;
+            game.ComboProtectedFromEnemies = game.ProtectingComboPowerUp;
+            game.ProtectingComboGem = false;
         }
     }
 }

@@ -20,17 +20,26 @@ namespace nyan_cat
         public bool IsOver { get; internal set; }
         public IGameObject[,] Field { get; }
         public List<IGameObject> GameObjects { get; private set; }
-        private List<IGameObject> futureGameObjects;
+        internal List<IGameObject> FutureGameObjects;
         private bool wasSpeedUp;
 
         private int fieldWidth;
         private int fieldHeight;
+        private readonly bool isCreateGameObjects = true;
+
+        internal bool ProtectingComboGem { get; set; }
+        internal bool ProtectingFromBombsGem { get; set; }
+        internal bool ProtectingFromEnemiesGem { get; set; }
+
+        internal bool ProtectingFromEnemiesPowerUp { get; set; }
+        internal bool ProtectingFromBombsPowerUp { get; set; }
+        internal bool ProtectingComboPowerUp { get; set; }
 
         public int MilkGlassesCombo =>
             NyanCat.CurrentPowerUp?.Kind == PowerUpKind.MilkGlasses
                 ? 2
                 : 1;
-       internal bool ComboProtectedFromEnemies { get; set; }
+        internal bool ComboProtectedFromEnemies { get; set; }
 
         public Game(int catLeftTopCornerX, int catLeftTopCornerY)
         {
@@ -38,7 +47,7 @@ namespace nyan_cat
             fieldWidth = MapCreator.GameWidth;
             fieldHeight = MapCreator.GameHeight;
             GameObjects = MapCreator.CreateRandomMap();
-            futureGameObjects = MapCreator.CreateRandomMap(true);
+            FutureGameObjects = MapCreator.CreateRandomMap(true);
             Score = 0;
             Combo = 1;
             IsOver = false;
@@ -52,10 +61,11 @@ namespace nyan_cat
 
             NyanCat = new NyanCat(new Point(catLeftTopCornerX, catLeftTopCornerY));
             GameObjects = map;
-            futureGameObjects = new List<IGameObject>();
+            FutureGameObjects = new List<IGameObject>();
             Score = 0;
             Combo = 1;
             IsOver = false;
+            isCreateGameObjects = false;
         }
 
         public void Update()
@@ -98,14 +108,14 @@ namespace nyan_cat
         private void UpdateListOfObjects()
         {
             GameObjects = GameObjects.Where(gameObj => gameObj.IsAlive).ToList();
-            var newObjects = futureGameObjects.Where(e => e.LeftTopCorner.X < fieldWidth).ToList();
+            var newObjects = FutureGameObjects.Where(e => e.LeftTopCorner.X < fieldWidth).ToList();
             foreach (var newObject in newObjects)
             {
                 GameObjects.Add(newObject);
-                futureGameObjects.Remove(newObject);
+                FutureGameObjects.Remove(newObject);
             }
-            if (futureGameObjects.Count == 0)
-                futureGameObjects = MapCreator.CreateRandomMap(true, true);
+            if (FutureGameObjects.Count == 0 && isCreateGameObjects)
+                FutureGameObjects = MapCreator.CreateRandomMap(true, true);
         }
 
         public IGameObject FindIntersectedObject()
@@ -142,29 +152,29 @@ namespace nyan_cat
                 && endX <= p.LeftTopCorner.X + p.Width))
                 .FirstOrDefault();
             return !(platform is null);
-            
+
         }
 
         private void HandleIntersection() => FindIntersectedObject()?.Use(this);
 
         private void MoveAllObjects()
         {
-            var acceleration = new Vector2(0, 0);
-            if (NyanCat.CurrentPowerUp?.Kind == PowerUpKind.TurboNyan)
-            {
-                wasSpeedUp = true;
-                acceleration = new Vector2(-5, 0);
-            }
-            else if (wasSpeedUp)
-            {
-                acceleration = new Vector2(5, 0);
-                wasSpeedUp = false;
-            }
-            MoveAllObjects(GameObjects, acceleration);
-            MoveAllObjects(futureGameObjects, acceleration);
+            //var acceleration = new Vector2(0, 0);
+            //if (NyanCat.CurrentPowerUp?.Kind == PowerUpKind.TurboNyan)
+            //{
+            //    wasSpeedUp = true;
+            //    acceleration = new Vector2(-5, 0);
+            //}
+            //else if (wasSpeedUp)
+            //{
+            //    acceleration = new Vector2(5, 0);
+            //    wasSpeedUp = false;
+            //}
+            MoveAllObjects(GameObjects);
+            MoveAllObjects(FutureGameObjects);
         }
 
-        private void MoveAllObjects(List<IGameObject> gameObjects, Vector2 acceleration)
+        private void MoveAllObjects(List<IGameObject> gameObjects)
         {
             foreach (var gameObject in gameObjects)
             {
@@ -173,7 +183,7 @@ namespace nyan_cat
                     dog.Move(this);
                     continue;
                 }
-                gameObject.Accelerate(acceleration);
+                //gameObject.Accelerate(acceleration);
                 gameObject.Move();
             }
         }

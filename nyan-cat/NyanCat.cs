@@ -19,20 +19,9 @@ namespace nyan_cat
     {
         public bool IsAlive { get; private set; }
         public int JumpTime { get; private set; }
-
-        public int Height => CurrentPowerUp?.Kind == PowerUpKind.BigNyan
-            ? 50 * 2
-            : 50;
-
-        public int Width => CurrentPowerUp?.Kind == PowerUpKind.BigNyan
-            ? 80 * 2
-            : 80;
-
-        private Point leftTopCorner;
-
-        public Point LeftTopCorner => CurrentPowerUp?.Kind == PowerUpKind.BigNyan
-            ? new Point(leftTopCorner.X, leftTopCorner.Y - 50)
-            : leftTopCorner;
+        public int Height { get; internal set; }
+        public int Width { get; internal set; }
+        public Point LeftTopCorner { get; internal set; }
         public Vector2 Velocity { get; private set; }
         public CatState State { get; set; }
         public Gem CurrentGem { get; set; }
@@ -43,9 +32,9 @@ namespace nyan_cat
         public NyanCat(Point leftTopCorner)
         {
             IsAlive = true;
-            //Height = 80;
-            //Width = 50;
-            this.leftTopCorner = leftTopCorner;
+            Height = 50;
+            Width = 80;
+            LeftTopCorner = leftTopCorner;
             Velocity = new Vector2(0, 0);
         }
 
@@ -59,7 +48,7 @@ namespace nyan_cat
         public void LandOnPlatform(Platform platform)
         {
             State = CatState.Run;
-            leftTopCorner = new Point(LeftTopCorner.X,
+            LeftTopCorner = new Point(LeftTopCorner.X,
                 platform.LeftTopCorner.Y - Height);
         }
 
@@ -75,12 +64,12 @@ namespace nyan_cat
                 Velocity = new Vector2(0, 0);
             if (LeftTopCorner.Y + (int)Velocity.Y < 0)
             {
-                leftTopCorner = new Point(LeftTopCorner.X + (int)Velocity.X, 0);
+                LeftTopCorner = new Point(LeftTopCorner.X + (int)Velocity.X, 0);
                 State = CatState.Fall;
                 return;
             }
-            leftTopCorner = new Point(leftTopCorner.X + (int)Velocity.X,
-                leftTopCorner.Y + (int)Velocity.Y);
+            LeftTopCorner = new Point(LeftTopCorner.X + (int)Velocity.X,
+                LeftTopCorner.Y + (int)Velocity.Y);
 
             if (LeftTopCorner.Y >= 788)
                 IsAlive = false;
