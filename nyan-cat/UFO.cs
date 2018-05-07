@@ -48,6 +48,8 @@ namespace nyan_cat
             IsMet = true;
             if (!game.NyanCat.ProtectedFromEnemies)
             {
+                game.NyanCat.CurrentPowerUp?.Deactivate(game);
+                game.NyanCat.CurrentPowerUp = null;
                 game.Score -= 100;
                 if (game.NyanCat.CurrentGem?.Kind != GemKind.MilkLongLife)
                     game.Combo = 1 * game.AddCombo;
