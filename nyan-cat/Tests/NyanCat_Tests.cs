@@ -50,26 +50,26 @@ namespace nyan_cat.Tests
         [Test]
         public void DoubleJump()
         {
-            var cat = new NyanCat(new Point(10, 50));
+            var cat = new NyanCat(new Point(10, 300));
+            cat.State = CatState.Run;
             cat.Jump();
-            Move(cat, 15 - 1);
+            Move(cat, 15);
             cat.Jump();
             Move(cat, 1);
             Assert.AreEqual(CatState.Jump, cat.State, cat.ToString());
-            Move(cat, 15 - 1);
+            Move(cat, 15);
             Assert.AreEqual(CatState.Fall, cat.State, cat.ToString());
         }
 
         [Test]
         public void NotTripleJump()
         {
-            var cat = new NyanCat(new Point(10, 50));
+            var cat = new NyanCat(new Point(10, 300));
             cat.Jump();
             Move(cat, 15);
-            Assert.AreEqual(CatState.Fall, cat.State, cat.ToString());
             cat.Jump();
             Assert.AreEqual(CatState.Jump, cat.State, cat.ToString());
-            Move(cat, 15);
+            Move(cat, 16);
             Assert.AreEqual(CatState.Fall, cat.State, cat.ToString());
             cat.Jump();
             Assert.AreEqual(CatState.Fall, cat.State, cat.ToString());
