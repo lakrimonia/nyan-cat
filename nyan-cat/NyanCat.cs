@@ -2,116 +2,109 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
+using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
-using NUnit.Framework;
 
-namespace nyan_cat.Tests
+namespace nyan_cat
 {
-    [TestFixture]
-    public class NyanCat_Tests
+    public enum CatState
     {
-        [Test]
-        public void CorrectCreation()
+        Run,
+        Jump,
+        Fall
+    }
+
+    public class NyanCat : IGameObject
+    {
+        public bool IsAlive { get; private set; }
+        private int jumpTime;
+        private bool canJump;
+        public int Height { get; internal set; }
+        public int Width { get; internal set; }
+        public Point LeftTopCorner { get; internal set; }
+        public Vector2 Velocity { get; private set; }
+        public CatState State { get; set; }
+        public Gem CurrentGem { get; set; }
+        public PowerUp CurrentPowerUp { get; set; }
+        public bool ProtectedFromBombs { get; internal set; }
+        public bool ProtectedFromEnemies { get; internal set; }
+
+        public NyanCat(Point leftTopCorner)
         {
-            var cat = new NyanCat(new Point(3, 3));
+            IsAlive = true;
+            Height = 50;
+            Width = 80;
+            LeftTopCorner = leftTopCorner;
+            Velocity = new Vector2(0, 0);
+            canJump = true;
         }
 
-        [Test]
-        public void Run()
-        {
-            var cat = new NyanCat(new Point(10, 50));
-            cat.Move();
-            Assert.AreEqual(new Point(10, 50), cat.LeftTopCorner, cat.ToString());
-            Assert.AreEqual(CatState.Run, cat.State, cat.ToString());
-        }
-
-        [Test]
         public void Jump()
         {
-            var cat = new NyanCat(new Point(10, 50));
-            cat.Jump();
-            cat.Move();
-            Assert.AreEqual(new Point(10, 36), cat.LeftTopCorner, cat.ToString());
-            Assert.AreEqual(CatState.Jump, cat.State, cat.ToString());
-            cat.Move();
-            Assert.AreEqual(new Point(10, 36 - 13), cat.LeftTopCorner, cat.ToString()); 
+            if (State == CatState.Fall)
+                return;
+            if (State == CatState.Run)
+                canJump = true;
+            else if (canJump)
+                canJump = false;
+            else
+                return;
+            jumpTime = 0;
+            Velocity = new Vector2(0, -15);
+            State = CatState.Jump;
         }
 
-        [Test]
-        public void FallAfterJump()
+        public void LandOnPlatform(Platform platform)
         {
-            var cat = new NyanCat(new Point(10, 50));
-            cat.Jump();
-            Move(cat, 15 + 1);
-            Assert.AreEqual(CatState.Fall, cat.State, cat.ToString());
+            State = CatState.Run;
+            LeftTopCorner = new Point(LeftTopCorner.X,
+                platform.LeftTopCorner.Y - Height);
         }
 
-        [Test]
-        public void DoubleJump()
+        public void Move()
         {
-            var cat = new NyanCat(new Point(10, 300));
-            cat.State = CatState.Run;
-            cat.Jump();
-            Move(cat, 15);
-            cat.Jump();
-            Move(cat, 1);
-            Assert.AreEqual(CatState.Jump, cat.State, cat.ToString());
-            Move(cat, 15);
-            Assert.AreEqual(CatState.Fall, cat.State, cat.ToString());
+            if (State == CatState.Jump && jumpTime >= 15)
+                State = CatState.Fall;
+            else
+            {
+                jumpTime += 1;
+                Accelerate(new Vector2(0, 1));
+            }
+            if (State == CatState.Fall)
+            {
+                Velocity = new Vector2(0, 10);
+                State = CatState.Fall;
+            }
+                
+            if (State == CatState.Run)
+                Velocity = new Vector2(0, 0);
+            if (LeftTopCorner.Y + (int)Velocity.Y < 0)
+            {
+                LeftTopCorner = new Point(LeftTopCorner.X + (int)Velocity.X, 0);
+                State = CatState.Fall;
+                return;
+            }
+            LeftTopCorner = new Point(LeftTopCorner.X + (int)Velocity.X,
+                LeftTopCorner.Y + (int)Velocity.Y);
+
+            if (LeftTopCorner.Y >= 788)
+                IsAlive = false;
         }
 
-        [Test]
-        public void NotTripleJump()
+        public void Kill() => IsAlive = false;
+
+        public void Accelerate(Vector2 acceleration)
         {
-            var cat = new NyanCat(new Point(10, 300));
-            cat.Jump();
-            Move(cat, 15);
-            cat.Jump();
-            Assert.AreEqual(CatState.Jump, cat.State, cat.ToString());
-            Move(cat, 16);
-            Assert.AreEqual(CatState.Fall, cat.State, cat.ToString());
-            cat.Jump();
-            Assert.AreEqual(CatState.Fall, cat.State, cat.ToString());
+            Velocity = new Vector2(Velocity.X + acceleration.X,
+                Velocity.Y + acceleration.Y);
         }
 
-        [Test]
-        public void ReloadJumpsAfterRun()
-        {
-            var cat = new NyanCat(new Point(10, 50));
-            cat.Jump();
-            cat.Jump();
-            Move(cat, 15);
-            cat.Jump();
-            Assert.AreEqual(CatState.Fall, cat.State, cat.ToString());
-            cat.State = CatState.Run;
-            cat.Jump();
-            Assert.AreEqual(CatState.Jump, cat.State, cat.ToString());
-        }
+        public void Use(Game game) { }
 
-        [Test]
-        public void FallIfTouchTheTop()
+        public override string ToString()
         {
-            var cat = new NyanCat(new Point(10, 5));
-            cat.Jump();
-            cat.Move();
-            Assert.AreEqual(new Point(10, 0), cat.LeftTopCorner, cat.ToString());
-            Assert.AreEqual(CatState.Fall, cat.State, cat.ToString());
-        }
-
-        [Test]
-        public void Death()
-        {
-            var cat = new NyanCat(new Point(10, 780));
-            cat.State = CatState.Fall;
-            cat.Move();
-            Assert.AreEqual(false, cat.IsAlive, cat.ToString());
-        }
-
-        public void Move (NyanCat cat, int count)
-        {
-            for (var i = 0; i < count; i++)
-                cat.Move();
+            return $"NyanCat({LeftTopCorner.X}, {LeftTopCorner.Y}), State =  {State}, Velocity = {Velocity}";
         }
     }
 }
