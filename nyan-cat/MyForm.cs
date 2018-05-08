@@ -35,7 +35,12 @@ namespace nyan_cat
                 game.Update();
             };
 
-            KeyDown += (sender, ev) => { game.NyanCat.Jump(); };
+            KeyDown += (sender, ev) => 
+            {
+                if (ev.KeyCode == Keys.Up)
+                    game.NyanCat.Jump();
+            };
+
             MaximizeBox = false;
             FormBorderStyle = FormBorderStyle.FixedDialog;
             InitializeComponent();

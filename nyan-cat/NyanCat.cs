@@ -18,7 +18,8 @@ namespace nyan_cat
     public class NyanCat : IGameObject
     {
         public bool IsAlive { get; private set; }
-        public int JumpTime { get; private set; }
+        private int jumpTime;
+        private bool canJump;
         public int Height { get; internal set; }
         public int Width { get; internal set; }
         public Point LeftTopCorner { get; internal set; }
@@ -36,12 +37,19 @@ namespace nyan_cat
             Width = 80;
             LeftTopCorner = leftTopCorner;
             Velocity = new Vector2(0, 0);
+            canJump = true;
         }
 
         public void Jump()
         {
-            JumpTime = 0;
-            Velocity = new Vector2(0, -10);
+            if (State == CatState.Run)
+                canJump = true;
+            else if (canJump)
+                canJump = false;
+            else
+                return;
+            jumpTime = 0;
+            Velocity = new Vector2(0, -15);
             State = CatState.Jump;
         }
 
@@ -54,10 +62,13 @@ namespace nyan_cat
 
         public void Move()
         {
-            if (State == CatState.Jump && JumpTime > 15)
+            if (State == CatState.Jump && jumpTime > 15)
                 State = CatState.Fall;
             else
-                JumpTime += 1;
+            {
+                jumpTime += 1;
+                Accelerate(new Vector2(0, 1));
+            }
             if (State == CatState.Fall)
                 Velocity = new Vector2(0, 10);
             if (State == CatState.Run)
