@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
@@ -23,7 +23,7 @@ namespace nyan_cat
 
         public List<Platform> FindPath(Game game, Platform start)
         {
-            var finish = GetPlatformUnderCat(game);
+            var finish = GetPlatformInFrontCat(game);
             var notVisited = new List<Platform>(GetPlatforms(game));
             var platforms = GetPlatforms(game);
             var track = new Dictionary<Platform, DijkstraData>
@@ -53,7 +53,8 @@ namespace nyan_cat
         {
             foreach (var point in directions)
             {
-                var currentPrice = track[toOpen].Price + GetPrice(toOpen, point);
+                var currentPrice = track[toOpen].Price +
+                    GetDistance(toOpen.LeftTopCorner, point.LeftTopCorner);
                 var nextNode = point;
                 if (!track.ContainsKey(nextNode) || track[nextNode].Price > currentPrice)
                 {
@@ -66,9 +67,12 @@ namespace nyan_cat
             }
         }
 
-        static private int GetPrice(Platform start, Platform end)
+        static private int GetDistance(Point start, Point end)
         {
-            return 0;
+            var dy = end.Y - start.Y;
+            var dx = end.X - start.X;
+            var distance = Math.Round(Math.Sqrt(dy * dy + dx * dx));
+            return (int)distance;
         }
 
         private List<Platform> GetResult(Dictionary<Platform, DijkstraData> track)
@@ -99,9 +103,15 @@ namespace nyan_cat
             return toOpen;
         }
 
-        public Platform GetPlatformUnderCat(Game game)
+        public Platform GetPlatformInFrontCat(Game game)
         {
-            return null;
+            var cat = game.NyanCat;
+            return game.GameObjects
+                .Where(gObj => gObj is Platform)
+                .Select(p => (Platform)p)
+                .Where(p => p.LeftTopCorner.X > cat.LeftTopCorner.X)
+                .OrderBy(p => GetDistance(cat.LeftTopCorner, p.LeftTopCorner))
+                .First();
         }
 
         public List<Platform> GetPlatforms(Game game)
@@ -114,8 +124,9 @@ namespace nyan_cat
 
         public List<Platform> GetDirections(Game game, Platform platform)
         {
-
-            return null;
+            return GetPlatforms(game)
+                .Where(p => GetDistance(platform.LeftTopCorner, p.LeftTopCorner) < 300)
+                .ToList();
         }
     }
 }
