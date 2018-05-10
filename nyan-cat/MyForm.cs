@@ -37,7 +37,11 @@ namespace nyan_cat
 
             KeyDown += (sender, ev) => 
             {
-                if (ev.KeyCode == Keys.Up)
+                var jumpKeys = new Keys[3]
+                {
+                    Keys.Up, Keys.W, Keys.Space
+                };
+                if ( jumpKeys.Contains(ev.KeyCode))
                     game.NyanCat.Jump();
             };
 
