@@ -21,9 +21,9 @@ namespace nyan_cat
         {
             IsAlive = true;
             LeftTopCorner = leftTopCorner;
-            Height = 50;
-            Width = 50;
-            Velocity = new Vector2(-1, 0);
+            Height = UsualGameObjectProperties.Height;
+            Width = UsualGameObjectProperties.Width;
+            Velocity = UsualGameObjectProperties.Velocity;
         }
 
         public void Move()

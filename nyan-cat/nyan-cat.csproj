@@ -88,6 +88,7 @@
     <Compile Include="Tests\PowerUp_Tests.cs" />
     <Compile Include="Tests\UFO_Tests.cs" />
     <Compile Include="UFO.cs" />
+    <Compile Include="UsualGameObjectProperties.cs" />
     <EmbeddedResource Include="MyForm.resx">
       <DependentUpon>MyForm.cs</DependentUpon>
     </EmbeddedResource>

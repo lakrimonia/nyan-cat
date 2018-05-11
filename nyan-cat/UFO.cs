@@ -19,9 +19,9 @@ namespace nyan_cat
 
         public UFO(Point leftTopCorner)
         {
-            Velocity = new Vector2(-1, 0);
+            Velocity = UsualGameObjectProperties.Velocity;
             LeftTopCorner = leftTopCorner;
-            Height = 50;
+            Height = UsualGameObjectProperties.Height;
             Width = 80;
             IsAlive = true;
         }

@@ -27,7 +27,7 @@ namespace nyan_cat
             if (platform.Width <= 50 || platform.LeftTopCorner.Y < 50)
                 throw new ArgumentException();
             Velocity = new Vector2(-1, 0);
-            Height = 50;
+            Height = UsualGameObjectProperties.Height;
             Width = 80;
             LeftTopCorner = GetLeftTopCorner(platform);
             IsAlive = true;

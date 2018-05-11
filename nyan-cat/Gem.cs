@@ -25,10 +25,10 @@ namespace nyan_cat
         public Gem(Point leftTopCorner, GemKind kind)
         {
             Kind = kind;
-            Velocity = new Vector2(-1, 0);
+            Velocity = UsualGameObjectProperties.Velocity;
             LeftTopCorner = leftTopCorner;
-            Height = 50;
-            Width = 50;
+            Height = UsualGameObjectProperties.Height;
+            Width = UsualGameObjectProperties.Width;
             IsAlive = true;
         }
 

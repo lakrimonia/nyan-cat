@@ -19,10 +19,10 @@ namespace nyan_cat
         public Bomb(Point leftTopCorner)
         {
             IsAlive = true;
-            Width = 50;
+            Width = UsualGameObjectProperties.Width;
             Height = 25;
             LeftTopCorner = leftTopCorner;
-            Velocity = new Vector2(-1, 0);
+            Velocity = UsualGameObjectProperties.Velocity;
         }
 
         public void Move()

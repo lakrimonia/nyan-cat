@@ -22,7 +22,7 @@ namespace nyan_cat
             var x2 = platform.LeftTopCorner.X + platform.Width;
             BeginEnd = Tuple.Create(x1, x2);
             Velocity = new Vector2(-1, 0);
-            Height = 50;
+            Height =UsualGameObjectProperties.Height;
             Width = 80;
             LeftTopCorner = GetLeftTopCorner(platform);
             IsAlive = true;

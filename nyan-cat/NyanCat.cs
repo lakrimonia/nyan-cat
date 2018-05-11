@@ -33,7 +33,7 @@ namespace nyan_cat
         public NyanCat(Point leftTopCorner)
         {
             IsAlive = true;
-            Height = 50;
+            Height = UsualGameObjectProperties.Height;
             Width = 80;
             LeftTopCorner = leftTopCorner;
             Velocity = new Vector2(0, 0);

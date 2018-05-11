@@ -18,7 +18,7 @@ namespace nyan_cat
             Height = 26;
             Width = width;
             LeftTopCorner = leftTopCorner;
-            Velocity = new Vector2(-1, 0);
+            Velocity = UsualGameObjectProperties.Velocity;
         }
 
         public void Move()
