@@ -28,7 +28,7 @@ namespace nyan_cat.Tests
         {
             var powerUp = CreatePowerUp(10, 10);
             powerUp.Move();
-            Assert.AreEqual(new Point(9, 10), powerUp.LeftTopCorner);
+            Assert.AreEqual(new Point(0, 10), powerUp.LeftTopCorner);
         }
 
         [Test]
@@ -203,10 +203,12 @@ namespace nyan_cat.Tests
         public void DoggieNyanNotProtectedFromBombs()
         {
             var platform = new Platform(new Point(100, 300), 300);
-            var bomb = new Bomb(new Point(181, 250));
+            var bomb = new Bomb(new Point(190, 250));
             var map = MapCreator.CreateMap(500, 500, platform, bomb);
             var game = new Game(100, 250, map);
             game.NyanCat.CurrentPowerUp = new PowerUp(new Point(0, 0), PowerUpKind.DoggieNyan);
+            game.NyanCat.CurrentPowerUp.Activate(game);
+            game.Update();
             game.Update();
             Assert.AreEqual(true, game.IsOver);
         }
