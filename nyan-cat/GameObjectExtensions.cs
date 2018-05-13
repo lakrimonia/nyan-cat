@@ -8,6 +8,8 @@ namespace nyan_cat
     {
         private static readonly Dictionary<IGameObject, string> images
             = new Dictionary<IGameObject, string>();
+        private static int currentCatFrame;
+        private static int currentPlatformFrame;
         public static readonly Dictionary<PowerUpKind, string> PowerUpImages
             = new Dictionary<PowerUpKind, string>
             {
@@ -17,7 +19,9 @@ namespace nyan_cat
                 [PowerUpKind.LoveNyan] = "love-nyan.png",
                 [PowerUpKind.MilkGlasses] = "milk-glasses.png",
                 [PowerUpKind.Piano] = "piano.png",
-                [PowerUpKind.TurboNyan] = "turbo-nyan.png"
+                [PowerUpKind.TurboNyan] = "turbo-nyan.png",
+                [PowerUpKind.Ghost] = "ghost.png",
+                [PowerUpKind.ShadowNyan] = "shadow-nyan.png"
             };
         public static readonly Dictionary<GemKind, string> GemImages
             = new Dictionary<GemKind, string>
@@ -42,14 +46,17 @@ namespace nyan_cat
                 [typeof(Bomb)] = "bomb.png",
             };
 
-        public static void Draw(this IGameObject gameObject, Graphics e)
+        public static void Draw(this IGameObject gameObject, Game game, Graphics e)
         {
             var rnd = new Random();
             var rect = new Rectangle(gameObject.LeftTopCorner.X,
                 gameObject.LeftTopCorner.Y, gameObject.Width,
                 gameObject.Height);
             string image;
-            if (images.ContainsKey(gameObject))
+            if (images.ContainsKey(gameObject)
+                && (game.NyanCat.CurrentPowerUp?.Kind != PowerUpKind.ShadowNyan || !(gameObject is NyanCat))
+                && (game.NyanCat.CurrentPowerUp?.Kind != PowerUpKind.Ghost || !(gameObject is Platform))
+                && (game.NyanCat.CurrentPowerUp?.Kind != PowerUpKind.DoggieNyan || !(gameObject is NyanCat)))
                 image = images[gameObject];
             else
             {
@@ -59,25 +66,42 @@ namespace nyan_cat
                         image = "dog.png";
                         break;
                     case NyanCat _:
-                        image = "nyan-cat.png";
+                        image = (gameObject as NyanCat).CurrentPowerUp?.Kind == PowerUpKind.DoggieNyan
+                                ? "doggie-nyan-cat.png"
+                                : (gameObject as NyanCat).CurrentPowerUp?.Kind == PowerUpKind.ShadowNyan && currentCatFrame > 24
+                                ? $"nyan-cat-s{currentCatFrame / 25}.png"
+                                : "nyan-cat.png";
+                        currentCatFrame = (gameObject as NyanCat).CurrentPowerUp?.Kind == PowerUpKind.ShadowNyan
+                                ? (currentCatFrame + 1) % 125
+                                : 0;
                         break;
                     case Platform _:
-                        image = $"p{gameObject.Width}.png";
+                        image = game.NyanCat.CurrentPowerUp?.Kind == PowerUpKind.Ghost && currentPlatformFrame > 199
+                                ? $"p{gameObject.Width}-g{currentPlatformFrame / 200}.png"
+                                : $"p{gameObject.Width}.png";
+                        currentPlatformFrame = game.NyanCat.CurrentPowerUp?.Kind == PowerUpKind.Ghost
+                            ? (currentPlatformFrame + 1) % 1000
+                            : 0;
                         break;
                     case Food _:
-                        image = foodImages[rnd.Next(foodImages.Count)];
+                        image = game.NyanCat.CurrentPowerUp?.Kind == PowerUpKind.MilkGlasses
+                                ? "milk.png"
+                                : foodImages[rnd.Next(foodImages.Count)];
                         break;
                     case Gem _:
-                        image = GemImages[((Gem) gameObject).Kind];
+                        image = GemImages[((Gem)gameObject).Kind];
                         break;
                     case PowerUp _:
-                        image = PowerUpImages[((PowerUp) gameObject).Kind];
+                        image = PowerUpImages[((PowerUp)gameObject).Kind];
                         break;
                     default:
                         image = otherImages[gameObject.GetType()];
                         break;
                 }
-                images[gameObject] = image;
+                if ((game.NyanCat.CurrentPowerUp?.Kind != PowerUpKind.ShadowNyan || !(gameObject is NyanCat))
+                    && (game.NyanCat.CurrentPowerUp?.Kind != PowerUpKind.Ghost || !(gameObject is Platform))
+                    && (game.NyanCat.CurrentPowerUp?.Kind != PowerUpKind.DoggieNyan || !(gameObject is NyanCat)))
+                    images[gameObject] = image;
             }
             e.DrawImage(Image.FromFile(image), rect);
         }

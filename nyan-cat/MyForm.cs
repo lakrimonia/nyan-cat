@@ -124,9 +124,9 @@ namespace nyan_cat
                     gem.Image = Image.FromFile(game.NyanCat.CurrentGem != null
                         ? GameObjectExtensions.GemImages[game.NyanCat.CurrentGem.Kind]
                         : "not_exist.png");
-                    game.NyanCat.Draw(args.Graphics);
+                    game.NyanCat.Draw(game, args.Graphics);
                     foreach (var gameObject in game.GameObjects)
-                        gameObject.Draw(args.Graphics);
+                        gameObject.Draw(game, args.Graphics);
                     game.Update();
                 }
             };
