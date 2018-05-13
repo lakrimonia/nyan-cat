@@ -44,5 +44,14 @@ namespace nyan_cat
         {
             return $"Platform ({LeftTopCorner.X}, {LeftTopCorner.Y}, {Width})";
         }
+        
+        public override bool Equals(object obj)
+        {
+            if (obj is Platform platform)
+            {
+                return this.LeftTopCorner == platform.LeftTopCorner;
+            }
+            return false;
+        }
     }
 }
