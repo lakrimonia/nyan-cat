@@ -9,7 +9,7 @@ using NUnit.Framework;
 namespace nyan_cat.Tests
 {
     [TestFixture]
-    public class Animal_Tests
+    public class TacNyan_Tests
     {
         [Test]
         public void IncorrectCreation1()
@@ -28,54 +28,34 @@ namespace nyan_cat.Tests
         [Test]
         public void CorrectCreation()
         {
-            var platform = CreatePlatform(100, 100, 60);
-            var animal = new TacNyan(platform);
+            var platform = CreatePlatform(100, 100, 90);
+            var tacNyan = new TacNyan(platform);
         }
 
         [Test]
         public void LeftTopCorner()
         {
-            var platform = CreatePlatform(100, 100, 60);
-            var animal = new TacNyan(platform);
+            var platform = CreatePlatform(100, 100, 90);
+            var tacNyan = new TacNyan(platform);
             Assert.AreEqual(new Point(100, 50),
-                animal.LeftTopCorner, animal.ToString());
+                tacNyan.LeftTopCorner, tacNyan.ToString());
         }
 
         [Test]
         public void MoveIfOnTheLeftEdge()
         {
-            var platform = CreatePlatform(100, 100, 52);
-            var animal = new TacNyan(platform);
-            var result = animal.LeftTopCorner;
-            animal.Move();
-            Assert.AreEqual(result, animal.LeftTopCorner);
+            var platform = CreatePlatform(100, 100, 90);
+            var tacNyan = new TacNyan(platform);
+            var result = tacNyan.LeftTopCorner;
+            tacNyan.Move();
+            Assert.AreEqual(result, tacNyan.LeftTopCorner);
         }
 
-        [Test]
-        public void MoveIfOnTheRightEdge()
-        {
-            var platform = CreatePlatform(100, 100, 52);
-            var animal = new TacNyan(platform);
-            var result = animal.LeftTopCorner.X - 2;
-            Move(animal, platform, 3);
-            Assert.AreEqual(result, animal.LeftTopCorner.X);
-        }
-
-        [Test]
-        public void OverEdge()
-        {
-            var platform = CreatePlatform(0, 100, 52);
-            var animal = new TacNyan(platform);
-            var result = animal.LeftTopCorner.X - 2;
-            Move(animal, platform, 3);
-            Assert.AreEqual(false, animal.IsAlive);
-        }
-
-        public void Move(IGameObject animal, IGameObject platform, int count)
+        public void Move(IGameObject tacNyan, IGameObject platform, int count)
         {
             for (var i = 0; i < count; i++)
             {
-                animal.Move();
+                tacNyan.Move();
                 platform.Move();
             }
         }
