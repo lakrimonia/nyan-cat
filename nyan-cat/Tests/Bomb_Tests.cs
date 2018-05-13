@@ -12,12 +12,6 @@ namespace nyan_cat.Tests
     public class Bomb_Tests
     {
         [Test]
-        public void IncorrectCreation()
-        {
-            Assert.Throws<ArgumentException>(() => { new Bomb(new Point(-1, 0)); });
-        }
-
-        [Test]
         public void CorrectCreation()
         {
             var bomb = new Bomb(new Point(3, 3));
@@ -28,7 +22,8 @@ namespace nyan_cat.Tests
         {
             var bomb = new Bomb(new Point(10, 10));
             bomb.Move();
-            Assert.AreEqual(new Point(9, 10), bomb.LeftTopCorner);
+            var result = new Point(10 + (int)UsualGameObjectProperties.Velocity.X, 10);
+            Assert.AreEqual(result, bomb.LeftTopCorner);
         }
 
         [Test]
