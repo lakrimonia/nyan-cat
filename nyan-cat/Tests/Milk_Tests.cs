@@ -12,12 +12,6 @@ namespace nyan_cat.Tests
     public class Milk_Tests
     {
         [Test]
-        public void IncorrectCreation()
-        {
-            Assert.Throws<ArgumentException>(() => { new Milk(new Point(-1, 0)); });
-        }
-
-        [Test]
         public void CorrectCreation()
         {
             var milk = new Milk(new Point(3, 3));
@@ -28,7 +22,8 @@ namespace nyan_cat.Tests
         {
             var milk = new Milk(new Point(10, 10));
             milk.Move();
-            Assert.AreEqual(new Point(9, 10), milk.LeftTopCorner);
+            var result = new Point(10 + (int)UsualGameObjectProperties.Velocity.X, 10);
+            Assert.AreEqual(result, milk.LeftTopCorner);
         }
 
         [Test]
