@@ -11,11 +11,6 @@ namespace nyan_cat.Tests
     [TestFixture]
     public class Cow_Tests
     {
-        [Test]
-        public void IncorrectCreation()
-        {
-            Assert.Throws<ArgumentException>(() => { new Cow(new Point(-1, 0)); });
-        }
 
         [Test]
         public void CorrectCreation()
@@ -28,7 +23,8 @@ namespace nyan_cat.Tests
         {
             var cow = new Cow(new Point(10, 10));
             cow.Move();
-            Assert.AreEqual(new Point(9, 10), cow.LeftTopCorner);
+            var result = new Point(10 + (int)UsualGameObjectProperties.Velocity.X, 10);
+            Assert.AreEqual(result, cow.LeftTopCorner);
         }
 
         [Test]
