@@ -12,12 +12,6 @@ namespace nyan_cat.Tests
     public class UFO_Tests
     {
         [Test]
-        public void IncorrectCreation()
-        {
-            Assert.Throws<ArgumentException>(() => { new UFO(new Point(-1, 0)); });
-        }
-
-        [Test]
         public void CorrectCreation()
         {
             var ufo = new UFO(new Point(3, 3));
@@ -28,7 +22,8 @@ namespace nyan_cat.Tests
         {
             var ufo = new UFO(new Point(10, 10));
             ufo.Move();
-            Assert.AreEqual(new Point(9, 10), ufo.LeftTopCorner);
+            var result = new Point(10 + (int)UsualGameObjectProperties.Velocity.X, 10);
+            Assert.AreEqual(result, ufo.LeftTopCorner);
         }
 
         [Test]
