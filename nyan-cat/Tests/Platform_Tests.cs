@@ -12,12 +12,6 @@ namespace nyan_cat.Tests
     public class Platform_Tests
     {
 
-        [TestCase(1, 1, 0)]
-        [TestCase(-1, 1, 10)]
-        public void IncorrectCreation(int xCenter, int yCenter, int width)
-        {
-            Assert.Throws<ArgumentException>(() => { CreatePlatform(xCenter, yCenter, width); });
-        }
         [Test]
         public void CorrectCreation()
         {
@@ -29,19 +23,12 @@ namespace nyan_cat.Tests
         {
             var platform = CreatePlatform(10, 10, 10);
             platform.Move();
-            Assert.AreEqual(new Point(9, 10), platform.LeftTopCorner);
+            var result = new Point(10 + (int)UsualGameObjectProperties.Velocity.X, 10);
+            Assert.AreEqual(result, platform.LeftTopCorner);
         }
 
         [Test]
-        public void OverEdge1()
-        {
-            var platform = CreatePlatform(2, 2, 2);
-            Move(platform, 3);
-            Assert.AreEqual(1, platform.Width, platform.ToString());
-        }
-
-        [Test]
-        public void OverEdge2()
+        public void OverEdge()
         {
             var platform = CreatePlatform(2, 2, 2);
             Move(platform, 4);
