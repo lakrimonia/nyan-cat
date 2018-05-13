@@ -55,7 +55,7 @@ namespace nyan_cat
             {
                 Font = new Font("Times New Roman", 24),
                 AutoSize = true,
-                Location = new Point(comboLabel.Right + 20, 700),
+                Location = new Point(comboLabel.Right + 35, 700),
                 ForeColor = Color.Black
             };
             var gameOver = new Label

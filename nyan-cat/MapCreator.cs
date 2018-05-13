@@ -26,7 +26,7 @@ namespace nyan_cat
 
         private static Random random = new Random();
 
-        public static List<IGameObject> CreateRandomMap(bool isFuture = false, bool enemiesAndBombs = false)
+        public static List<IGameObject> CreateRandomMap(bool isFuture = false, bool enemiesAndBombs = false, int startX = 0)
         {
             withoutEnemiesAndBombs = !enemiesAndBombs;
             maxBombCount = enemiesAndBombs && IsThereChance(20) ? random.Next(1, 3 + 1) : 0;
@@ -36,7 +36,7 @@ namespace nyan_cat
             maxPowerUpCount = IsThereChance(40) ? random.Next(1, 3 + 1) : 0;
             addX = isFuture ? GameWidth : 0;
             var map = new List<IGameObject>();
-            for (var x = 0 + addX; x < GameWidth - 100 + addX; x += 250)
+            for (var x = startX + addX; x < GameWidth - 100 + addX; x += 250)
             {
                 PlacePlatformsBombsAndEnemies(map, x);
                 PlaceFoodAndMilk(map, x);

@@ -10,7 +10,7 @@ namespace nyan_cat
 {
     public static class UsualGameObjectProperties
     {
-        public static readonly Vector2 Velocity = new Vector2(-1, 0);
+        public static readonly Vector2 Velocity = new Vector2(-10, 0);
         public static readonly int Width = 50;
         public static readonly int Height = 50;
     }

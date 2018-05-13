@@ -114,8 +114,17 @@ namespace nyan_cat
                 GameObjects.Add(newObject);
                 FutureGameObjects.Remove(newObject);
             }
-            if (FutureGameObjects.Count == 0 && isCreateGameObjects)
-                FutureGameObjects = MapCreator.CreateRandomMap(true, true);
+            if (FutureGameObjects.Count < 20 && isCreateGameObjects)
+            {
+                var startX = FutureGameObjects.Count == 0
+                    ? 0
+                    : FutureGameObjects
+                    .Max(gObj => gObj.LeftTopCorner.X + gObj.Width) - MapCreator.GameWidth;
+                var futureGameObjects = MapCreator.CreateRandomMap(true, true, startX);
+                FutureGameObjects = FutureGameObjects
+                    .Concat(futureGameObjects)
+                    .ToList();
+            }
         }
 
         public IGameObject FindIntersectedObject()

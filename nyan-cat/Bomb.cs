@@ -44,7 +44,7 @@ namespace nyan_cat
 
         public void Use(Game game)
         {
-            if (!game.NyanCat.ProtectedFromBombs)
+            if (!game.NyanCat.ProtectedFromBombs && game.NyanCat.State == CatState.Run)
                 game.NyanCat.Kill();
         }
 
