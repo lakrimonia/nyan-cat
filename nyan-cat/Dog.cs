@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
@@ -47,10 +47,15 @@ namespace nyan_cat
             Energy += 1;
             if (Energy >= 30)
             {
-                var nextPlatform = Pathfinder.FindPath(game, Location)[0];
-                Energy = 0;
-                LeftTopCorner = GetLeftTopCorner(nextPlatform);
-                return;
+                Platform nextPlatform = null;
+                var path = Pathfinder.FindPath(game, Location);
+                if (path.Count > 0)
+                {
+                    nextPlatform = path[0];
+                    Energy = 0;
+                    LeftTopCorner = GetLeftTopCorner(nextPlatform);
+                    return;
+                }
             }
 
             var dx = (int)Velocity.X;
@@ -74,7 +79,7 @@ namespace nyan_cat
             if (!game.NyanCat.ProtectedFromEnemies)
             {
                 game.Score -= 100;
-                if (game.NyanCat.CurrentGem.Kind != GemKind.MilkLongLife)
+                if (game.NyanCat.CurrentGem?.Kind != GemKind.MilkLongLife)
                     game.Combo = 1 * game.AddCombo;
             }
         }
@@ -84,7 +89,6 @@ namespace nyan_cat
             return new Point(platform.LeftTopCorner.X + platform.Width / 2,
                 platform.LeftTopCorner.Y - Height);
         }
-
 
         public override string ToString()
         {
