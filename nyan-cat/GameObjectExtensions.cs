@@ -55,6 +55,9 @@ namespace nyan_cat
             {
                 switch (gameObject)
                 {
+                    case Dog _:
+                        image = "dog.png";
+                        break;
                     case NyanCat _:
                         image = "nyan-cat.png";
                         break;
