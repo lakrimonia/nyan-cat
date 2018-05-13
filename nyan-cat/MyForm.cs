@@ -30,32 +30,32 @@ namespace nyan_cat
 
             var scoreLabel = new Label
             {
-                Text = "SCORE:",
-                Font = new Font("Times New Roman", 24),
-                AutoSize = true,
+                Text = "SCORE: ",
+                Font = new Font("Times New Roman", 19),
+                Size = new Size(105, 25),
                 Location = new Point(0, 700),
                 ForeColor = Color.Black
             };
             var score = new Label
             {
-                Font = new Font("Times New Roman", 24),
+                Font = new Font("Times New Roman", 19),
                 AutoSize = true,
-                Location = new Point(scoreLabel.Right + 20, 700),
+                Location = new Point(scoreLabel.Right, 700),
                 ForeColor = Color.Black
             };
             var comboLabel = new Label
             {
                 Text = "COMBO:",
-                Font = new Font("Times New Roman", 24),
-                AutoSize = true,
-                Location = new Point(score.Right + 100, 700),
+                Font = new Font("Times New Roman", 19),
+                Size = new Size(125, 30),
+                Location = new Point(score.Right + 25, 700),
                 ForeColor = Color.Black
             };
             var combo = new Label
             {
-                Font = new Font("Times New Roman", 24),
+                Font = new Font("Times New Roman", 19),
                 AutoSize = true,
-                Location = new Point(comboLabel.Right + 35, 700),
+                Location = new Point(comboLabel.Right, 700),
                 ForeColor = Color.Black
             };
             var gameOver = new Label
@@ -65,11 +65,41 @@ namespace nyan_cat
                 Location = new Point(300, 350),
                 ForeColor = Color.Red
             };
+            var powerUpLabel = new Label
+            {
+                Text = "POWER UP:",
+                Font = new Font("Times New Roman", 19),
+                Size = new Size(160, 30),
+                Location = new Point(combo.Right + 25, 700),
+                ForeColor = Color.Black
+            };
+            var powerUp = new PictureBox
+            {
+                Image = Image.FromFile("not_exist.png"),
+                Location = new Point(powerUpLabel.Right, 690)
+            };
+            var gemLabel = new Label
+            {
+                Text = "GEM:",
+                Font = new Font("Times New Roman", 19),
+                Size = new Size(80, 30),
+                Location = new Point(powerUp.Right + 25, 700),
+                ForeColor = Color.Black
+            };
+            var gem = new PictureBox
+            {
+                Image = Image.FromFile("not_exist.png"),
+                Location = new Point(gemLabel.Right, 690)
+            };
             Controls.Add(scoreLabel);
             Controls.Add(score);
             Controls.Add(comboLabel);
             Controls.Add(combo);
             Controls.Add(gameOver);
+            Controls.Add(powerUpLabel);
+            Controls.Add(powerUp);
+            Controls.Add(gemLabel);
+            Controls.Add(gem);
 
             Paint += (sender, args) =>
             {
@@ -83,9 +113,17 @@ namespace nyan_cat
                     scoreLabel.ForeColor = Color.Red;
                     score.Location = new Point(scoreLabel.Right + 20, scoreLabel.Top);
                     score.ForeColor = Color.Red;
+                    gem.Image = null;
+                    powerUp.Image = null;
                 }
                 else
                 {
+                    powerUp.Image = Image.FromFile(game.NyanCat.CurrentPowerUp != null
+                        ? GameObjectExtensions.PowerUpImages[game.NyanCat.CurrentPowerUp.Kind]
+                        : "not_exist.png");
+                    gem.Image = Image.FromFile(game.NyanCat.CurrentGem != null
+                        ? GameObjectExtensions.GemImages[game.NyanCat.CurrentGem.Kind]
+                        : "not_exist.png");
                     game.NyanCat.Draw(args.Graphics);
                     foreach (var gameObject in game.GameObjects)
                         gameObject.Draw(args.Graphics);

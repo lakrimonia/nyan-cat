@@ -75,7 +75,6 @@
     <Compile Include="PowerUp.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Tests\Animal_Tests.cs" />
     <Compile Include="Tests\Bomb_Tests.cs" />
     <Compile Include="Tests\Cow_Tests.cs" />
     <Compile Include="Tests\Food_Tests.cs" />
@@ -86,6 +85,7 @@
     <Compile Include="Tests\NyanCat_Tests.cs" />
     <Compile Include="Tests\Platform_Tests.cs" />
     <Compile Include="Tests\PowerUp_Tests.cs" />
+    <Compile Include="Tests\TacNyan_Tests.cs" />
     <Compile Include="Tests\UFO_Tests.cs" />
     <Compile Include="UFO.cs" />
     <Compile Include="UsualGameObjectProperties.cs" />

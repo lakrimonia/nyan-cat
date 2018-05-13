@@ -8,7 +8,7 @@ namespace nyan_cat
     {
         private static readonly Dictionary<IGameObject, string> images
             = new Dictionary<IGameObject, string>();
-        private static readonly Dictionary<PowerUpKind, string> powerUpImages
+        public static readonly Dictionary<PowerUpKind, string> PowerUpImages
             = new Dictionary<PowerUpKind, string>
             {
                 [PowerUpKind.BigNyan] = "big-nyan.png",
@@ -19,7 +19,7 @@ namespace nyan_cat
                 [PowerUpKind.Piano] = "piano.png",
                 [PowerUpKind.TurboNyan] = "turbo-nyan.png"
             };
-        private static readonly Dictionary<GemKind, string> gemImages
+        public static readonly Dictionary<GemKind, string> GemImages
             = new Dictionary<GemKind, string>
             {
                 [GemKind.DoubleCombo] = "red-gem.png",
@@ -68,10 +68,10 @@ namespace nyan_cat
                         image = foodImages[rnd.Next(foodImages.Count)];
                         break;
                     case Gem _:
-                        image = gemImages[((Gem) gameObject).Kind];
+                        image = GemImages[((Gem) gameObject).Kind];
                         break;
                     case PowerUp _:
-                        image = powerUpImages[((PowerUp) gameObject).Kind];
+                        image = PowerUpImages[((PowerUp) gameObject).Kind];
                         break;
                     default:
                         image = otherImages[gameObject.GetType()];
