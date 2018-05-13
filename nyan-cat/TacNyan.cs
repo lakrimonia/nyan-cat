@@ -16,12 +16,12 @@ namespace nyan_cat
 
         public TacNyan(Platform platform)
         {
-            if (platform.Width <= 50 || platform.LeftTopCorner.Y < 50)
+            if (platform.Width <= 80 || platform.LeftTopCorner.Y < 50)
                 throw new ArgumentException();
             var x1 = platform.LeftTopCorner.X;
             var x2 = platform.LeftTopCorner.X + platform.Width;
             BeginEnd = Tuple.Create(x1, x2);
-            Velocity = new Vector2(-1, 0);
+            Velocity = UsualGameObjectProperties.Velocity;
             Height =UsualGameObjectProperties.Height;
             Width = 80;
             LeftTopCorner = GetLeftTopCorner(platform);
