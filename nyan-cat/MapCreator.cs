@@ -115,7 +115,7 @@ namespace nyan_cat
                         maxBombCount--;
                     }
                 }
-                if(maxEnemyCount>0)
+                if (platform.Width > 200 && maxEnemyCount > 0)
                 {
                     var enemy = GenerateEnemy(platform);
                     if (enemy != null)
