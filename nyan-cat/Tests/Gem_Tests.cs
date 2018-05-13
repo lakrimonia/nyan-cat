@@ -11,12 +11,6 @@ namespace nyan_cat.Tests
     [TestFixture]
     public class Gem_Tests
     {
-        //[Test]
-        //public void IncorrectCreation()
-        //{
-        //    Assert.Throws<ArgumentException>(() => { CreateDoubleGem(-1, 0); });
-        //}
-
         [Test]
         public void CorrectCreation()
         {
@@ -28,7 +22,8 @@ namespace nyan_cat.Tests
         {
             var gem = CreateDoubleGem(10, 10);
             gem.Move();
-            Assert.AreEqual(new Point(9, 10), gem.LeftTopCorner);
+            var result = new Point(10 + (int)UsualGameObjectProperties.Velocity.X, 10);
+            Assert.AreEqual(result, gem.LeftTopCorner);
         }
 
         [Test]
