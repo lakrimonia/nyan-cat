@@ -37,9 +37,11 @@ namespace nyan_cat
                 {
                     BackColor = Color.Black;
                     ControlElements.gameOver.Text = "GAME OVER";
-                    ControlElements.scoreLabel.Location = new Point(380, ControlElements.gameOver.Bottom + 20);
+                    ControlElements.scoreLabel.Location = new Point(380,
+                        ControlElements.gameOver.Bottom + 20);
                     ControlElements.scoreLabel.ForeColor = Color.Red;
-                    ControlElements.score.Location = new Point(ControlElements.scoreLabel.Right + 20, ControlElements.scoreLabel.Top);
+                    ControlElements.score.Location = new Point(ControlElements.scoreLabel.Right + 20,
+                        ControlElements.scoreLabel.Top);
                     ControlElements.score.ForeColor = Color.Red;
                     ControlElements.gem.Image = null;
                     ControlElements.powerUp.Image = null;

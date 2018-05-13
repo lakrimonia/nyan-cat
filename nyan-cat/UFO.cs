@@ -50,7 +50,7 @@ namespace nyan_cat
             {
                 game.NyanCat.CurrentPowerUp?.Deactivate(game);
                 game.NyanCat.CurrentPowerUp = null;
-                var subtractedScore = game.Score < 100 ? 0 : Math.Min(game.Score.ToString().Length * 10, 1000000);
+                var subtractedScore = game.Score < 100 ? 0 : Math.Max(game.Score.ToString().Length * 10, 1000000);
                 game.Score -= subtractedScore;
                 if (game.NyanCat.CurrentGem?.Kind != GemKind.MilkLongLife)
                     game.Combo = 1 * game.AddCombo;
