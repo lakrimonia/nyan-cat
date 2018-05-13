@@ -30,23 +30,25 @@ namespace nyan_cat
 
         public void Move()
         {
-            if (BeginEnd.Item2 - BeginEnd.Item1 <= Width)
-            {
-                IsAlive = false;
-                return;
-            }
+            var dx = (int)Velocity.X;
+            var dy = (int)Velocity.Y;
+            if (LeftTopCorner.X + (int)Velocity.X < BeginEnd.Item1)
+                LeftTopCorner = new Point(BeginEnd.Item1,
+                LeftTopCorner.Y + dy);
+            else if (LeftTopCorner.X + (int)Velocity.X > BeginEnd.Item2)
+                LeftTopCorner = new Point(BeginEnd.Item2,
+                LeftTopCorner.Y + dy);
+            else
+                LeftTopCorner = new Point(LeftTopCorner.X + dx,
+                    LeftTopCorner.Y + dy);
             if (LeftTopCorner.X == BeginEnd.Item1)
                 Velocity = new Vector2(0, 0);
             if (LeftTopCorner.X + Width == BeginEnd.Item2)
-                Velocity = new Vector2(-2, 0);
-            var dx = (int)Velocity.X;
-            var dy = (int)Velocity.Y;
-
-            LeftTopCorner = new Point(LeftTopCorner.X + dx,
-                LeftTopCorner.Y + dy);
-            BeginEnd = BeginEnd.Item1 == 0 ?
-                Tuple.Create(0, BeginEnd.Item2 - 1) :
-                Tuple.Create(BeginEnd.Item1 - 1, BeginEnd.Item2 - 1);
+                Velocity =
+                    new Vector2(UsualGameObjectProperties.Velocity.X * 2, 0);
+            BeginEnd = 
+                Tuple.Create(BeginEnd.Item1 + (int)UsualGameObjectProperties.Velocity.X,
+                BeginEnd.Item2 + (int)UsualGameObjectProperties.Velocity.X);
         }
 
         private Point GetLeftTopCorner(Platform platform)
