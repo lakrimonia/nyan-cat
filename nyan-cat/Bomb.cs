@@ -45,7 +45,7 @@ namespace nyan_cat
         public void Use(Game game)
         {
             if (!game.NyanCat.ProtectedFromBombs)
-                game.IsOver = true;
+                game.NyanCat.Kill();
         }
 
         public override string ToString()

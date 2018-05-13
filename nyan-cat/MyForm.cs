@@ -58,19 +58,40 @@ namespace nyan_cat
                 Location = new Point(comboLabel.Right + 20, 700),
                 ForeColor = Color.Black
             };
+            var gameOver = new Label
+            {
+                Font = new Font("Times New Roman", 42),
+                AutoSize = true,
+                Location = new Point(300, 350),
+                ForeColor = Color.Red
+            };
             Controls.Add(scoreLabel);
             Controls.Add(score);
             Controls.Add(comboLabel);
             Controls.Add(combo);
+            Controls.Add(gameOver);
+            game.IsOver = true;
 
             Paint += (sender, args) =>
             {
                 score.Text = game.Score.ToString();
                 combo.Text = game.Combo.ToString();
-                game.NyanCat.Draw(args.Graphics);
-                foreach (var gameObject in game.GameObjects)
-                    gameObject.Draw(args.Graphics);
-                game.Update();
+                if (game.IsOver)
+                {
+                    BackColor = Color.Black;
+                    gameOver.Text = "GAME OVER";
+                    scoreLabel.Location = new Point(380, gameOver.Bottom + 20);
+                    scoreLabel.ForeColor = Color.Red;
+                    score.Location = new Point(scoreLabel.Right + 20, scoreLabel.Top);
+                    score.ForeColor = Color.Red;
+                }
+                else
+                {
+                    game.NyanCat.Draw(args.Graphics);
+                    foreach (var gameObject in game.GameObjects)
+                        gameObject.Draw(args.Graphics);
+                    game.Update();
+                }
             };
 
             KeyDown += (sender, ev) =>

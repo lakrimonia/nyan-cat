@@ -84,7 +84,7 @@ namespace nyan_cat
             }
             MoveAllObjects();
             NyanCat.Move();
-            if (NyanCat.LeftTopCorner.Y <= 0)
+            if (!NyanCat.IsAlive)
             {
                 IsOver = true;
                 return;
