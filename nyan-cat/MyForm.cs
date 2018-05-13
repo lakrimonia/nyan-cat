@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel;
 using System.Data;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -27,21 +28,58 @@ namespace nyan_cat
             };
             timer.Start();
 
+            var scoreLabel = new Label
+            {
+                Text = "SCORE:",
+                Font = new Font("Times New Roman", 24),
+                AutoSize = true,
+                Location = new Point(0, 700),
+                ForeColor = Color.Black
+            };
+            var score = new Label
+            {
+                Font = new Font("Times New Roman", 24),
+                AutoSize = true,
+                Location = new Point(scoreLabel.Right + 20, 700),
+                ForeColor = Color.Black
+            };
+            var comboLabel = new Label
+            {
+                Text = "SCORE:",
+                Font = new Font("Times New Roman", 24),
+                AutoSize = true,
+                Location = new Point(score.Right + 100, 700),
+                ForeColor = Color.Black
+            };
+            var combo = new Label
+            {
+                Font = new Font("Times New Roman", 24),
+                AutoSize = true,
+                Location = new Point(comboLabel.Right + 20, 700),
+                ForeColor = Color.Black
+            };
+            Controls.Add(scoreLabel);
+            Controls.Add(score);
+            Controls.Add(comboLabel);
+            Controls.Add(combo);
+
             Paint += (sender, args) =>
             {
+                score.Text = game.Score.ToString();
+                combo.Text = game.Combo.ToString();
                 game.NyanCat.Draw(args.Graphics);
                 foreach (var gameObject in game.GameObjects)
                     gameObject.Draw(args.Graphics);
                 game.Update();
             };
 
-            KeyDown += (sender, ev) => 
+            KeyDown += (sender, ev) =>
             {
                 var jumpKeys = new Keys[3]
                 {
                     Keys.Up, Keys.W, Keys.Space
                 };
-                if ( jumpKeys.Contains(ev.KeyCode))
+                if (jumpKeys.Contains(ev.KeyCode))
                     game.NyanCat.Jump();
             };
 
