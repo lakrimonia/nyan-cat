@@ -45,7 +45,7 @@ namespace nyan_cat
             };
             var comboLabel = new Label
             {
-                Text = "SCORE:",
+                Text = "COMBO:",
                 Font = new Font("Times New Roman", 24),
                 AutoSize = true,
                 Location = new Point(score.Right + 100, 700),
@@ -70,7 +70,6 @@ namespace nyan_cat
             Controls.Add(comboLabel);
             Controls.Add(combo);
             Controls.Add(gameOver);
-            game.IsOver = true;
 
             Paint += (sender, args) =>
             {
