@@ -49,6 +49,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ControlElements.cs" />
     <Compile Include="DogPathfinder.cs" />
     <Compile Include="GemActions.cs" />
     <Compile Include="PowerUpActions.cs" />
