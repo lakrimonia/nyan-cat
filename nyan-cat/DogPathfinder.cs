@@ -2,97 +2,133 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
-using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace nyan_cat
 {
-
-
-    public class Dog : IGameObject
+    public class DogPathfinder
     {
-        public Vector2 Velocity { get; private set; }
-        public Point LeftTopCorner { get; private set; }
-        public int Height { get; }
-        public int Width { get; }
-        public bool IsAlive { get; private set; }
-        public bool IsMet { get; set; }
-        public Platform Location { get; private set; }
-        public int Energy { get; private set; }
-        public DogPathfinder Pathfinder { get; private set; }
 
-    public Dog(Platform platform)
+        private class DijkstraData
         {
-            if (platform.Width <= 50 || platform.LeftTopCorner.Y < 50)
-                throw new ArgumentException();
-            Velocity = new Vector2(-1, 0);
-            Height = UsualGameObjectProperties.Height;
-            Width = 80;
-            LeftTopCorner = GetLeftTopCorner(platform);
-            IsAlive = true;
-            Energy = 0;
-            Location = platform;
-            Pathfinder = new DogPathfinder();
+            public Platform Previous { get; set; }
+            public double Price { get; set; }
         }
 
-        public void Move()
-        {
-            throw new Exception("Wrong call!");
-        }
+        private static readonly Platform platformDefault =
+            new Platform(new Point(0, 0), 0);
 
-        public void Move(Game game)
+        private Platform end;
+
+        public List<Platform> FindPath(Game game, Platform start)
         {
-            
-            Energy += 1;
-            if (Energy >= 30)
+            var finish = GetPlatformInFrontCat(game);
+            var notVisited = new List<Platform>(GetPlatforms(game));
+            var platforms = GetPlatforms(game);
+            var track = new Dictionary<Platform, DijkstraData>
             {
-                Platform nextPlatform = null;
-                var path = Pathfinder.FindPath(game, Location);
-                if (path.Count > 0)
+                [start] = new DijkstraData { Price = 0, Previous = platformDefault }
+            };
+
+            while (true)
+            {
+                var toOpen = ChooseToOpen(notVisited, track);
+                if (toOpen == platformDefault)
+                    return new List<Platform>();
+                if (toOpen == finish)
                 {
-                    nextPlatform = path[0];
-                    Energy = 0;
-                    LeftTopCorner = GetLeftTopCorner(nextPlatform);
-                    return;
+                    end = toOpen;
+                    break;
+                }
+                var directions = GetDirections(game, toOpen);
+                UpdateTrack(track, toOpen, directions);
+                notVisited.Remove(toOpen);
+            }
+            return GetResult(track);
+        }
+
+        private static void UpdateTrack(Dictionary<Platform, DijkstraData> track,
+            Platform toOpen, List<Platform> directions)
+        {
+            foreach (var point in directions)
+            {
+                var currentPrice = track[toOpen].Price +
+                    GetDistance(toOpen.LeftTopCorner, point.LeftTopCorner);
+                var nextNode = point;
+                if (!track.ContainsKey(nextNode) || track[nextNode].Price > currentPrice)
+                {
+                    track[nextNode] = new DijkstraData
+                    {
+                        Previous = toOpen,
+                        Price = currentPrice
+                    };
                 }
             }
-
-            var dx = (int)Velocity.X;
-            var dy = (int)Velocity.Y;
-            LeftTopCorner = new Point(LeftTopCorner.X + dx,
-                LeftTopCorner.Y + dy);
-            IsAlive = IsAlive && LeftTopCorner.X > 0;
         }
 
-        public void Kill() => IsAlive = false;
-
-        public void Accelerate(Vector2 acceleration)
+        static private int GetDistance(Point start, Point end)
         {
-            Velocity = new Vector2(Velocity.X + acceleration.X,
-                Velocity.Y + acceleration.Y);
+            var dy = end.Y - start.Y;
+            var dx = end.X - start.X;
+            var distance = Math.Round(Math.Sqrt(dy * dy + dx * dx));
+            return (int)distance;
         }
 
-        public void Use(Game game)
+        private List<Platform> GetResult(Dictionary<Platform, DijkstraData> track)
         {
-            IsMet = true;
-            if (!game.NyanCat.ProtectedFromEnemies)
+            var result = new List<Platform>();
+            while (end != platformDefault)
             {
-                game.Score -= 100;
-                if (game.NyanCat.CurrentGem?.Kind != GemKind.MilkLongLife)
-                    game.Combo = 1 * game.AddCombo;
+                result.Add(end);
+                end = track[end].Previous;
             }
+            result.Reverse();
+            return result.Skip(1).ToList();
         }
 
-        private Point GetLeftTopCorner(Platform platform)
+        private static Platform ChooseToOpen(List<Platform> notVisited,
+            Dictionary<Platform, DijkstraData> track)
         {
-            return new Point(platform.LeftTopCorner.X + platform.Width / 2,
-                platform.LeftTopCorner.Y - Height);
+            var toOpen = platformDefault;
+            var bestPrice = double.PositiveInfinity;
+            foreach (var e in notVisited)
+            {
+                if (track.ContainsKey(e) && track[e].Price < bestPrice)
+                {
+                    bestPrice = track[e].Price;
+                    toOpen = e;
+                }
+            }
+            return toOpen;
         }
 
-        public override string ToString()
+        public Platform GetPlatformInFrontCat(Game game)
         {
-            return $"Dog ({LeftTopCorner.X}, {LeftTopCorner.Y})";
+            var cat = game.NyanCat;
+            return game.GameObjects
+                .Where(gObj => gObj is Platform)
+                .Select(p => (Platform)p)
+                .Where(p => cat.LeftTopCorner.X - p.LeftTopCorner.X < 100)
+                .OrderBy(p => GetDistance(cat.LeftTopCorner, p.LeftTopCorner))
+                .First();
+        }
+
+        public List<Platform> GetPlatforms(Game game)
+        {
+            return game.GameObjects
+                .Where(gObj => gObj is Platform)
+                .Select(p => (Platform)p)
+                .ToList();
+        }
+
+        public List<Platform> GetDirections(Game game, Platform platform)
+        {
+            return GetPlatforms(game)
+                .Where(p => !p.Equals(platform))
+                .Where(p => p.LeftTopCorner.X < platform.LeftTopCorner.X)
+                .Where(p => GetDistance(platform.LeftTopCorner, p.LeftTopCorner) < 500)
+                .ToList();
         }
     }
 }
