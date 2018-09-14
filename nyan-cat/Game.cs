@@ -17,11 +17,10 @@ namespace nyan_cat
         internal int AddCombo = 1;
         public int Combo { get; internal set; }
 
-        public bool IsOver { get; internal set; }
+        public bool IsOver { get; private set; }
         public IGameObject[,] Field { get; }
         public List<IGameObject> GameObjects { get; private set; }
         internal List<IGameObject> FutureGameObjects;
-        private bool wasSpeedUp;
 
         private int fieldWidth;
         private int fieldHeight;
@@ -55,7 +54,6 @@ namespace nyan_cat
 
         public Game(int catLeftTopCornerX, int catLeftTopCornerY, List<IGameObject> map)
         {
-            // TODO: fix it
             fieldWidth = MapCreator.GameWidth;
             fieldHeight = MapCreator.GameHeight;
 

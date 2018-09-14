@@ -17,12 +17,11 @@ namespace nyan_cat
         public int Height { get; }
         public int Width { get; }
         public bool IsAlive { get; private set; }
-        public bool IsMet { get; set; }
         public Platform Location { get; private set; }
         public int Energy { get; private set; }
         public DogPathfinder Pathfinder { get; private set; }
 
-    public Dog(Platform platform)
+        public Dog(Platform platform)
         {
             if (platform.Width <= 50 || platform.LeftTopCorner.Y < 50)
                 throw new ArgumentException();
@@ -43,7 +42,7 @@ namespace nyan_cat
 
         public void Move(Game game)
         {
-            
+
             Energy += 1;
             if (Energy >= 30)
             {
@@ -75,13 +74,10 @@ namespace nyan_cat
 
         public void Use(Game game)
         {
-            IsMet = true;
-            if (!game.NyanCat.ProtectedFromEnemies)
-            {
-                game.Score -= 100;
-                if (game.NyanCat.CurrentGem?.Kind != GemKind.MilkLongLife)
-                    game.Combo = 1 * game.AddCombo;
-            }
+            game.Score -= (int)(0.9 * game.Score);
+            game.Combo = 1 * game.AddCombo;
+            game.NyanCat.CurrentPowerUp?.Deactivate(game);
+            game.NyanCat.CurrentGem?.Deactivate(game);
         }
 
         private Point GetLeftTopCorner(Platform platform)
